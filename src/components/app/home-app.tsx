@@ -24,6 +24,7 @@ import {
   todayYmd,
   type DerivedTask,
 } from "@/lib/domain/task";
+import { TASK_NAME_MAX } from "@/lib/validation";
 import { signOut } from "@/lib/auth-client";
 
 type Screen = "home" | "edit" | "history";
@@ -575,7 +576,8 @@ export function HomeApp({ userName }: { userName?: string | null }) {
               </label>
               <input
                 value={fName}
-                onChange={(e) => setFName(e.target.value)}
+                onChange={(e) => setFName(e.target.value.slice(0, TASK_NAME_MAX))}
+                maxLength={TASK_NAME_MAX}
                 placeholder="例：シーツ洗い"
                 className="w-full rounded-2xl border-[1.5px] px-4 py-3.5 outline-none"
                 style={{
@@ -585,6 +587,9 @@ export function HomeApp({ userName }: { userName?: string | null }) {
                   fontSize: 16,
                 }}
               />
+              <p className="mt-1.5 text-[11.5px] font-medium" style={{ color: "var(--sub)" }}>
+                {Array.from(fName).length}/{TASK_NAME_MAX}
+              </p>
 
               <label className="block text-[12px] font-bold mt-5 mb-2" style={{ color: "var(--sub)" }}>
                 目安の周期

@@ -14,6 +14,8 @@ import {
   type DerivedTask,
   type TaskWithLogs,
 } from "@/lib/domain/task";
+import { limitCreate, limitMutation } from "@/lib/rate-limit";
+import { parseTaskName } from "@/lib/validation";
 
 /** クライアントから渡された今日 (YYYY-MM-DD)。未指定・不正時はサーバー日付。 */
 function resolveToday(clientToday?: string): string {
@@ -81,21 +83,25 @@ export async function createTaskAction(input: {
 }): Promise<ActionResult<{ id: string }>> {
   try {
     const userId = await requireUserId();
-    const name = input.name.trim();
-    if (!name) return { ok: false, error: "タスク名を入力してください" };
+    const rl = limitCreate(userId, "createTask");
+    if (!rl.ok) return { ok: false, error: rl.error };
+
+    const parsed = parseTaskName(input.name);
+    if (!parsed.ok) return { ok: false, error: parsed.error };
     const cycleDays = clampCycleDays(input.cycleDays);
 
     const [row] = await db
       .insert(tasks)
       .values({
         userId,
-        name,
+        name: parsed.name,
         cycleDays,
         createdAt: new Date(),
         updatedAt: new Date(),
       })
       .returning({ id: tasks.id });
 
+    revalidatePath("/home");
     revalidatePath("/");
     return { ok: true, data: { id: row.id } };
   } catch (e) {
@@ -114,17 +120,21 @@ export async function updateTaskAction(input: {
 }): Promise<ActionResult> {
   try {
     const userId = await requireUserId();
-    const name = input.name.trim();
-    if (!name) return { ok: false, error: "タスク名を入力してください" };
+    const rl = limitMutation(userId, "updateTask");
+    if (!rl.ok) return { ok: false, error: rl.error };
+
+    const parsed = parseTaskName(input.name);
+    if (!parsed.ok) return { ok: false, error: parsed.error };
     const cycleDays = clampCycleDays(input.cycleDays);
 
     const updated = await db
       .update(tasks)
-      .set({ name, cycleDays, updatedAt: new Date() })
+      .set({ name: parsed.name, cycleDays, updatedAt: new Date() })
       .where(and(eq(tasks.id, input.id), eq(tasks.userId, userId)))
       .returning({ id: tasks.id });
 
     if (!updated.length) return { ok: false, error: "タスクが見つかりません" };
+    revalidatePath("/home");
     revalidatePath("/");
     return { ok: true, data: undefined };
   } catch (e) {
@@ -139,11 +149,15 @@ export async function updateTaskAction(input: {
 export async function deleteTaskAction(id: string): Promise<ActionResult> {
   try {
     const userId = await requireUserId();
+    const rl = limitMutation(userId, "deleteTask");
+    if (!rl.ok) return { ok: false, error: rl.error };
+
     const deleted = await db
       .delete(tasks)
       .where(and(eq(tasks.id, id), eq(tasks.userId, userId)))
       .returning({ id: tasks.id });
     if (!deleted.length) return { ok: false, error: "タスクが見つかりません" };
+    revalidatePath("/home");
     revalidatePath("/");
     return { ok: true, data: undefined };
   } catch (e) {
@@ -163,6 +177,9 @@ export async function recordDoneAction(input: {
 }): Promise<ActionResult<{ date: string }>> {
   try {
     const userId = await requireUserId();
+    const rl = limitMutation(userId, "recordDone");
+    if (!rl.ok) return { ok: false, error: rl.error };
+
     const today = resolveToday(input.clientToday);
     const date = input.date ?? today;
 
@@ -216,6 +233,9 @@ export async function undoRecordAction(input: {
 }): Promise<ActionResult> {
   try {
     const userId = await requireUserId();
+    const rl = limitMutation(userId, "undoRecord");
+    if (!rl.ok) return { ok: false, error: rl.error };
+
     const owned = await db.query.tasks.findFirst({
       where: and(eq(tasks.id, input.taskId), eq(tasks.userId, userId)),
     });

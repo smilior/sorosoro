@@ -13,7 +13,6 @@ import {
   deleteTaskAction,
   listTasksAction,
   recordDoneAction,
-  seedIfEmptyAction,
   undoRecordAction,
   updateTaskAction,
 } from "@/actions/tasks";
@@ -105,10 +104,7 @@ export function HomeApp({ userName }: { userName?: string | null }) {
   }, []);
 
   useEffect(() => {
-    (async () => {
-      await seedIfEmptyAction();
-      await refresh();
-    })();
+    void refresh();
   }, [refresh]);
 
   useEffect(() => {

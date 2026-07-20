@@ -137,7 +137,6 @@
             <tr><td><code>deleteTaskAction(id)</code></td><td>タスク削除（logs cascade）</td><td>要</td></tr>
             <tr><td><code>recordDoneAction({ taskId, date? })</code></td><td>実施日を追加（省略時は今日）</td><td>要</td></tr>
             <tr><td><code>undoRecordAction({ taskId, date })</code></td><td>実施日を1件削除</td><td>要</td></tr>
-            <tr><td><code>seedIfEmptyAction()</code></td><td>タスク0件時のみサンプル投入</td><td>要</td></tr>
           </tbody>
         </table>
       </div>
@@ -215,12 +214,6 @@
         <li>失敗: 未認証 / 未所有「タスクが見つかりません」 / 「取り消しに失敗しました」</li>
       </ul>
 
-      <h3>seedIfEmptyAction()</h3>
-      <ul>
-        <li>概要: 当該ユーザーにタスクが0件のときだけサンプル4件＋過去ログを投入</li>
-        <li>成功: <code>{ ok: true, data: { seeded: boolean } }</code></li>
-        <li>既にタスクがある場合: <code>seeded: false</code></li>
-      </ul>
 
       <h2>エラー対応表（要約）</h2>
       <div class="tblwrap">

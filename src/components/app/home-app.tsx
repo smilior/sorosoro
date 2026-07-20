@@ -221,12 +221,31 @@ export function HomeApp({ userName }: { userName?: string | null }) {
     });
   };
 
-  const undo = () => {
+  const undoFromToast = () => {
     if (!toast?.undo) return;
     const { taskId, date } = toast.undo;
+    cancelRecord(taskId, date, { fromToast: true });
+  };
+
+  /** 誤記録の取り消し（ホームの「記録済み」タップ / 履歴の取り消し） */
+  const cancelRecord = (
+    taskId: string,
+    date: string,
+    opts?: { fromToast?: boolean },
+  ) => {
     startTransition(async () => {
-      await undoRecordAction({ taskId, date });
-      setToast(null);
+      const res = await undoRecordAction({ taskId, date });
+      if (!res.ok) {
+        showToast(res.error);
+        return;
+      }
+      const t = tasks.find((x) => x.id === taskId);
+      const label = date === today ? "今日" : relativeFromToday(date, today);
+      if (opts?.fromToast) {
+        setToast(null);
+      } else {
+        showToast(`「${t?.name ?? "タスク"}」の記録を取り消しました（${label}）`);
+      }
       await refresh();
     });
   };
@@ -236,8 +255,10 @@ export function HomeApp({ userName }: { userName?: string | null }) {
     [tasks, historyId],
   );
 
-  const onPointerDownDone = (taskId: string) => {
+  const onPointerDownDone = (taskId: string, doneToday: boolean) => {
     longPressFired.current = false;
+    // 記録済みのときは長押しで過去日シートを開かない（誤操作防止）
+    if (doneToday) return;
     longPressTimer.current = setTimeout(() => {
       longPressFired.current = true;
       setSheetTaskId(taskId);
@@ -255,7 +276,11 @@ export function HomeApp({ userName }: { userName?: string | null }) {
       longPressFired.current = false;
       return;
     }
-    if (doneToday) return;
+    // 誤タップ対策: 記録済みをもう一度タップで取り消し
+    if (doneToday) {
+      cancelRecord(taskId, today);
+      return;
+    }
     record(taskId);
   };
 
@@ -351,8 +376,13 @@ export function HomeApp({ userName }: { userName?: string | null }) {
                     </div>
                     <button
                       type="button"
+                      aria-label={
+                        t.doneToday
+                          ? "今日の記録を取り消す"
+                          : "今日やったと記録する"
+                      }
                       onClick={(e) => onClickDone(e, t.id, t.doneToday)}
-                      onPointerDown={() => onPointerDownDone(t.id)}
+                      onPointerDown={() => onPointerDownDone(t.id, t.doneToday)}
                       onPointerUp={onPointerUpDone}
                       onPointerLeave={onPointerUpDone}
                       onPointerCancel={onPointerUpDone}
@@ -381,10 +411,12 @@ export function HomeApp({ userName }: { userName?: string | null }) {
 
               {!loading && tasks.length > 0 && (
                 <div
-                  className="text-center text-[11.5px] font-medium pt-3 opacity-75"
+                  className="text-center text-[11.5px] font-medium pt-3 opacity-75 leading-relaxed"
                   style={{ color: "var(--sub)" }}
                 >
                   「今日やった」を長押しすると、過去の日付でも記録できます
+                  <br />
+                  「記録済み」をもう一度タップすると取り消せます
                 </div>
               )}
 
@@ -609,18 +641,33 @@ export function HomeApp({ userName }: { userName?: string | null }) {
                 {[...historyTask.logs].reverse().map((ymd, i, arr) => (
                   <div
                     key={ymd}
-                    className="flex items-center justify-between px-4 py-3.5"
+                    className="flex items-center gap-2 px-4 py-3.5"
                     style={{
                       borderBottom:
                         i < arr.length - 1 ? "1px solid var(--line)" : undefined,
                     }}
                   >
-                    <span className="text-[14px] font-semibold">
-                      {formatLogLabel(ymd, today)}
-                    </span>
-                    <span className="text-[12.5px] font-medium" style={{ color: "var(--sub)" }}>
-                      {relativeFromToday(ymd, today)}
-                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[14px] font-semibold">
+                        {formatLogLabel(ymd, today)}
+                      </div>
+                      <div className="text-[12.5px] font-medium mt-0.5" style={{ color: "var(--sub)" }}>
+                        {relativeFromToday(ymd, today)}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      aria-label={`${formatLogLabel(ymd, today)}の記録を取り消す`}
+                      disabled={pending}
+                      onClick={() => cancelRecord(historyTask.id, ymd)}
+                      className="shrink-0 rounded-xl px-3 py-2 text-[12.5px] font-bold active:scale-95 disabled:opacity-50"
+                      style={{
+                        background: "color-mix(in oklab, var(--del) 12%, var(--card))",
+                        color: "var(--del)",
+                      }}
+                    >
+                      取り消し
+                    </button>
                   </div>
                 ))}
               </div>
@@ -715,7 +762,7 @@ export function HomeApp({ userName }: { userName?: string | null }) {
               {toast.undo && (
                 <button
                   type="button"
-                  onClick={undo}
+                  onClick={undoFromToast}
                   className="shrink-0 font-bold underline-offset-2"
                   style={{ color: "var(--accent-bright)" }}
                 >

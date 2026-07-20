@@ -86,7 +86,9 @@ export function HomeApp({ userName }: { userName?: string | null }) {
   const [historyId, setHistoryId] = useState<string | null>(null);
   const [editFrom, setEditFrom] = useState<Screen>("home");
   const [fName, setFName] = useState("");
-  const [fCycle, setFCycle] = useState(7);
+  /** 空文字を許す（入力中にクリアしてから打ち直せる） */
+  const [fCycle, setFCycle] = useState<number | "">(7);
+  const [fCycleError, setFCycleError] = useState<string | null>(null);
   const [confirmDel, setConfirmDel] = useState(false);
   const [sheetTaskId, setSheetTaskId] = useState<string | null>(null);
   const [sheetDate, setSheetDate] = useState("");
@@ -183,6 +185,7 @@ export function HomeApp({ userName }: { userName?: string | null }) {
     setEditId(null);
     setFName("");
     setFCycle(7);
+    setFCycleError(null);
     setConfirmDel(false);
     setEditFrom("home");
     setScreen("edit");
@@ -194,6 +197,7 @@ export function HomeApp({ userName }: { userName?: string | null }) {
     setEditId(id);
     setFName(t.name);
     setFCycle(t.cycleDays);
+    setFCycleError(null);
     setConfirmDel(false);
     setEditFrom(from);
     setScreen("edit");
@@ -211,11 +215,26 @@ export function HomeApp({ userName }: { userName?: string | null }) {
 
   const saveTask = () => {
     const name = fName.trim();
-    if (!name) return;
+    if (!name) {
+      showToast("タスク名を入力してください");
+      return;
+    }
+    if (fCycle === "" || fCycle === null || fCycle === undefined) {
+      setFCycleError("目安の周期を入力してください");
+      showToast("目安の周期を入力してください");
+      return;
+    }
+    const cycleDays = Number(fCycle);
+    if (!Number.isFinite(cycleDays) || cycleDays < 1 || cycleDays > 365) {
+      setFCycleError("周期は1〜365の整数で入力してください");
+      showToast("周期は1〜365の整数で入力してください");
+      return;
+    }
+    setFCycleError(null);
     startTransition(async () => {
       const res = editId
-        ? await updateTaskAction({ id: editId, name, cycleDays: fCycle })
-        : await createTaskAction({ name, cycleDays: fCycle });
+        ? await updateTaskAction({ id: editId, name, cycleDays })
+        : await createTaskAction({ name, cycleDays });
       if (!res.ok) {
         showToast(res.error);
         return;
@@ -581,7 +600,10 @@ export function HomeApp({ userName }: { userName?: string | null }) {
                     <button
                       key={p.days}
                       type="button"
-                      onClick={() => setFCycle(p.days)}
+                      onClick={() => {
+                        setFCycle(p.days);
+                        setFCycleError(null);
+                      }}
                       className="flex-1 rounded-2xl border py-3 text-[13px] font-bold"
                       style={{
                         background: on ? "var(--accent-soft)" : "var(--card)",
@@ -597,34 +619,62 @@ export function HomeApp({ userName }: { userName?: string | null }) {
               </div>
               <div className="mt-3 flex items-center gap-2">
                 <input
-                  type="number"
-                  min={1}
-                  max={365}
-                  value={fCycle}
-                  onChange={(e) => setFCycle(Number(e.target.value) || 1)}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="日数"
+                  value={fCycle === "" ? "" : String(fCycle)}
+                  onChange={(e) => {
+                    const raw = e.target.value.trim();
+                    setFCycleError(null);
+                    if (raw === "") {
+                      setFCycle("");
+                      return;
+                    }
+                    // 数字以外は無視（入力しやすさ優先）
+                    if (!/^\d+$/.test(raw)) return;
+                    const n = Number(raw);
+                    if (n > 365) {
+                      setFCycle(365);
+                      return;
+                    }
+                    setFCycle(n);
+                  }}
                   className="w-[86px] rounded-2xl border text-center py-2.5 text-[15px] font-bold"
                   style={{
                     background: "var(--card)",
-                    borderColor: "var(--line)",
+                    borderColor: fCycleError ? "var(--del)" : "var(--line)",
                     color: "var(--ink)",
                   }}
+                  aria-invalid={!!fCycleError}
+                  aria-describedby={fCycleError ? "cycle-error" : undefined}
                 />
                 <span className="text-[13px] font-medium" style={{ color: "var(--sub)" }}>
                   日ごと
                 </span>
               </div>
+              {fCycleError && (
+                <p
+                  id="cycle-error"
+                  className="mt-2 text-[12.5px] font-bold"
+                  style={{ color: "var(--del)" }}
+                  role="alert"
+                >
+                  {fCycleError}
+                </p>
+              )}
               <p className="mt-4 text-[12px] font-medium leading-relaxed" style={{ color: "var(--sub)" }}>
                 きっちり守れなくても大丈夫。あくまで「目安」です。あとからいつでも変えられます。
               </p>
 
               <button
                 type="button"
-                disabled={!fName.trim() || pending}
+                disabled={pending}
                 onClick={saveTask}
                 className="mt-8 w-full rounded-[18px] py-4 text-[15px] font-bold disabled:opacity-50"
                 style={{
-                  background: fName.trim() ? "var(--accent)" : "var(--line)",
-                  color: fName.trim() ? "#fff" : "var(--sub)",
+                  background: "var(--accent)",
+                  color: "#fff",
                 }}
               >
                 保存する
@@ -822,7 +872,13 @@ export function HomeApp({ userName }: { userName?: string | null }) {
                 />
                 <button
                   type="button"
-                  onClick={() => sheetDate && record(sheetTaskId, sheetDate)}
+                  onClick={() => {
+                    if (!sheetDate.trim()) {
+                      showToast("日付を選んでください");
+                      return;
+                    }
+                    record(sheetTaskId, sheetDate);
+                  }}
                   className="rounded-2xl px-4 py-3 text-[13.5px] font-bold text-white"
                   style={{ background: "var(--accent)" }}
                 >

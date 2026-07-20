@@ -1,0 +1,38 @@
+# 本番 Turso へのスキーマ適用（main push で自動）
+# Vercel のアプリ CD とは独立。DB だけ先に揃える。
+name: Database Migrate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "drizzle/**"
+      - "src/lib/db/schema.ts"
+      - "drizzle.config.ts"
+      - ".github/workflows/db-migrate.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: db-migrate-production
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    name: Migrate production Turso
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run drizzle-kit migrate
+        run: npx drizzle-kit migrate
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}

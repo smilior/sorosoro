@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>処理設計 ｜ {{PROJECT_NAME}} 設計書</title>
+<meta name="description" content="複雑・致命的な処理のみ事前設計し、それ以外はコードとテストを正とする処理設計の方針と雛形。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+</head>
+<body>
+<div class="wrap">
+<aside id="sidePanel">
+  <div class="side-header">
+    <button type="button" class="side-toggle" id="sideToggle" aria-controls="sidePanel" aria-expanded="true" aria-label="メニューを閉じる" title="メニューを閉じる"><span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+    <div class="side-header-text">
+      <div class="brand"><a href="../index.html">設計書雛形</a><small>{{PROJECT_NAME}} / ap-template-v4</small></div>
+      <div class="side-title"><a href="../index.html">{{PROJECT_NAME}}</a></div>
+    </div>
+  </div>
+  <nav class="side-nav" aria-label="ドキュメント一覧">
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#01_要件定義">01 要件定義</a></span>
+      <ol>
+        <li><a href="../01_要件定義/01_プロジェクト概要.html"><span class="n">01</span>プロジェクト概要</a></li>
+        <li><a href="../01_要件定義/02_ペルソナ・ユーザーストーリー.html"><span class="n">02</span>ペルソナ・ユーザーストーリー</a></li>
+        <li><a href="../01_要件定義/03_機能要件.html"><span class="n">03</span>機能要件</a></li>
+        <li><a href="../01_要件定義/04_非機能要件.html"><span class="n">04</span>非機能要件</a></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#02_基本設計">02 基本設計</a></span>
+      <ol>
+        <li><a href="../02_基本設計/01_システム構成.html"><span class="n">01</span>システム構成</a></li>
+        <li><a href="../02_基本設計/02_用語集.html"><span class="n">02</span>用語集</a></li>
+        <li><a href="../02_基本設計/03_機能設計.html"><span class="n">03</span>機能設計</a></li>
+        <li><a href="../02_基本設計/04_画面設計.html"><span class="n">04</span>画面設計</a></li>
+        <li><a href="../02_基本設計/05_DB設計.html"><span class="n">05</span>DB設計(論理)</a></li>
+        <li><a href="../02_基本設計/06_API設計.html"><span class="n">06</span>API設計</a></li>
+        <li><a href="../02_基本設計/07_認可設計.html"><span class="n">07</span>認可設計</a></li>
+        <li><a href="../02_基本設計/adr/0000_ADRテンプレート.html"><span class="n">A0</span>ADR テンプレート</a></li>
+        <li><a href="../02_基本設計/adr/0001_技術スタック(テンプレート既定).html"><span class="n">A1</span>ADR 技術スタック</a></li>
+      </ol>
+    </div>
+    <div class="phase is-current">
+      <span class="phase-label"><a href="../index.html#03_詳細設計">03 詳細設計</a></span>
+      <ol>
+        <li><a href="../03_詳細設計/01_処理設計.html" class="active"><span class="n">01</span>処理設計</a></li>
+        <li><a href="../03_詳細設計/02_テーブル定義.html"><span class="n">02</span>テーブル定義</a></li>
+        <li><a href="../03_詳細設計/03_単体テスト観点.html"><span class="n">03</span>単体テスト観点</a></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#04_テスト">04 テスト</a></span>
+      <ol>
+        <li><a href="../04_テスト/01_テスト計画.html"><span class="n">01</span>テスト計画</a></li>
+        <li><a href="../04_テスト/02_結合テストケース.html"><span class="n">02</span>結合テストケース</a></li>
+        <li><a href="../04_テスト/03_総合テストケース.html"><span class="n">03</span>総合テストケース</a></li>
+        <li><a href="../04_テスト/04_受け入れテストシナリオ.html"><span class="n">04</span>受け入れテストシナリオ</a></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#05_リリース">05 リリース</a></span>
+      <ol>
+        <li><a href="../05_リリース/01_リリース計画.html"><span class="n">01</span>リリース計画</a></li>
+        <li><a href="../05_リリース/02_リリースノート.html"><span class="n">02</span>リリースノート</a></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#06_運用">06 運用</a></span>
+      <ol>
+        <li><a href="../06_運用/01_監視・障害対応.html"><span class="n">01</span>監視・障害対応</a></li>
+        <li><a href="../06_運用/02_バックアップ・メンテナンス.html"><span class="n">02</span>バックアップ・メンテナンス</a></li>
+      </ol>
+    </div>
+  </nav>
+  <div class="side-meta">全 24 文書 + インデックス<br>正本: Markdown(docs-template/)</div>
+</aside>
+  <main>
+    <div class="hero">
+      <div class="kicker">03 詳細設計 · 01/03</div>
+      <h1>処理設計</h1>
+      <p class="lede">複雑・致命的な処理のみ事前設計し、それ以外はコードとテストを正とする方針を定める。</p>
+    </div>
+    <div class="prose">
+      <div class="callout">
+        <p class="callout-title">記入ガイド</p>
+        <p>{{ }} を自アプリの値に置換。(例)行は削除。</p>
+        <p>全機能分は書かない。下の選定基準に該当する機能のみ本書に記す。</p>
+        <p>該当しない機能はコードとテストコードを詳細設計の正とする。</p>
+        <p>事前設計の対象選定基準: 各機能を下の基準で判定し、1つでも該当すれば本書に処理を記す。</p>
+        <p>処理フロー雛形: 対象機能ごとに複製。分岐・例外を明示する。</p>
+        <p>状態遷移雛形: 状態を持つ機能のみ。遷移条件と禁止遷移を明示する。</p>
+        <p>シーケンス雛形: 外部サービス・複数層をまたぐ処理のみ。トランザクション境界を注記する。</p>
+        <p>例外処理一覧: 上記対象機能の異常系を列挙。HTTP ステータスと対応を対で書く。</p>
+      </div>
+
+      <h2>方針</h2>
+      <ul>
+        <li>詳細設計書は網羅的に書かない。外部仕様(基本設計)と受け入れ基準を AI に渡してコード生成し、生成された<strong>コードとテストコードを詳細設計の正</strong>とする。</li>
+        <li>設計書とコードの乖離を避けるため、以下の選定基準に該当する処理のみ本書に事前記載しレビューする。</li>
+        <li>本書に記載しない機能は、基本設計の外部仕様・受け入れ基準・単体テスト観点表を根拠に実装する。</li>
+      </ul>
+
+      <h2>事前設計の対象選定基準</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">基準</th><th scope="col">該当例</th><th scope="col">事前設計</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>金額・料率・数量の計算を伴う</td><td>請求額算出、按分、丸め処理</td><td>必須</td></tr>
+            <tr><td>状態遷移がある</td><td>申請→承認→完了、下書き→公開</td><td>必須</td></tr>
+            <tr><td>複数テーブル横断の整合性が必要</td><td>在庫引当、二重登録防止</td><td>必須</td></tr>
+            <tr><td>誤りが業務・法務上致命的</td><td>権限判定、個人情報の開示範囲</td><td>必須</td></tr>
+            <tr><td>単純 CRUD・一覧・画面表示</td><td>example 機能相当</td><td>不要(コードを正とする)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>処理フロー雛形</h2>
+      <figure class="diagram">
+        <figcaption>処理フロー雛形</figcaption>
+        <img src="../assets/diagrams/process-flow.svg" alt="入力・トリガーからバリデーション、主処理、業務ルール判定を経て永続化・応答またはエラー応答に至る処理フローの雛形。">
+        <p class="zoom-hint">クリックで拡大</p>
+      </figure>
+
+      <h2>状態遷移雛形</h2>
+      <figure class="diagram">
+        <figcaption>状態遷移雛形</figcaption>
+        <img src="../assets/diagrams/state-machine.svg" alt="下書き・申請中・承認済・差戻しの状態と、申請・承認・却下・再申請の遷移を示す状態遷移の雛形。">
+        <p class="zoom-hint">クリックで拡大</p>
+      </figure>
+
+      <h2>シーケンス雛形</h2>
+      <figure class="diagram">
+        <figcaption>シーケンス雛形</figcaption>
+        <img src="../assets/diagrams/sequence-example.svg" alt="利用者・Router・Service・DB 間のやり取りとトランザクション境界を示すシーケンスの雛形。">
+        <p class="zoom-hint">クリックで拡大</p>
+      </figure>
+
+      <h2>例外処理一覧</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">ID</th><th scope="col">発生条件</th><th scope="col">応答</th><th scope="col">対応</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>(例) EX-01</td><td>対象レコード不存在</td><td>404</td><td>エラーメッセージ表示</td></tr>
+            <tr><td>EX-01</td><td>{{異常条件}}</td><td>{{ステータス}}</td><td>{{対応}}</td></tr>
+            <tr><td>EX-02</td><td>{{異常条件}}</td><td>{{ステータス}}</td><td>{{対応}}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <nav class="page-nav">
+      <a class="page-nav-item" href="../02_基本設計/adr/0001_技術スタック(テンプレート既定).html"><span class="page-nav-dir">← 前</span><span class="page-nav-title">ADR-0001 技術スタック</span><span class="page-nav-phase">02 基本設計</span></a>
+      <a class="page-nav-item page-nav-next" href="02_テーブル定義.html"><span class="page-nav-dir">次 →</span><span class="page-nav-title">テーブル定義</span><span class="page-nav-phase">03 詳細設計</span></a>
+    </nav>
+    <div class="foot">{{PROJECT_NAME}} 設計書雛形 · 正本は Markdown(docs-template/) · <a href="../index.html">インデックス</a></div>
+  </main>
+</div>
+<dialog class="zoom-dlg" id="zoomDlg">
+  <div class="zoom-bar">
+    <span class="title">図解</span>
+    <button type="button" data-z="out" title="縮小">−</button>
+    <button type="button" data-z="in" title="拡大">＋</button>
+    <button type="button" data-z="reset" title="全体表示">リセット</button>
+    <button type="button" data-z="close" title="閉じる">閉じる ✕</button>
+  </div>
+  <div class="zoom-stage" id="zoomStage"></div>
+</dialog>
+<script src="../assets/nav.js" defer></script>
+<script src="../assets/enhance.js" defer></script>
+</body>
+</html>

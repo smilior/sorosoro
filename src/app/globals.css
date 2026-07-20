@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+:root {
+  --desk: #e9e3d5;
+  --bg: #f6f2ea;
+  --card: #ffffff;
+  --ink: #453f35;
+  --sub: #8c8370;
+  --line: #eae3d4;
+  --accent: #6fa378;
+  --accent-ink: color-mix(in oklab, var(--accent) 62%, #233326);
+  --accent-soft: color-mix(in oklab, var(--accent) 14%, #ffffff);
+  --accent-bright: color-mix(in oklab, var(--accent) 55%, #ffffff);
+  --warn-bg: #f8efd3;
+  --warn-ink: #95762a;
+  --late-bg: #f8e5da;
+  --late-ink: #b0654a;
+  --sheet: #ffffff;
+  --toast-bg: #39342b;
+  --toast-c: #fbf8f2;
+  --del: #bc6248;
+  --shadow: 0 1px 3px rgba(80, 70, 55, 0.06);
+  color-scheme: light;
+}
+
+.dark {
+  --desk: #141210;
+  --bg: #201e19;
+  --card: #2b2822;
+  --ink: #eae4d6;
+  --sub: #a29882;
+  --line: #3a362d;
+  --accent-ink: color-mix(in oklab, var(--accent) 60%, #eaf2ea);
+  --accent-soft: color-mix(in oklab, var(--accent) 20%, #2b2822);
+  --warn-bg: #37301c;
+  --warn-ink: #cda94e;
+  --late-bg: #3c2a20;
+  --late-ink: #d88f70;
+  --sheet: #2b2822;
+  --toast-bg: #ede7d9;
+  --toast-c: #2b2822;
+  --del: #d88f70;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  color-scheme: dark;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
+  background: var(--desk);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+@keyframes screenIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.anim-screen {
+  animation: screenIn 0.22s ease both;
+}
+
+.anim-sheet {
+  animation: sheetUp 0.28s ease both;
+}
+
+.anim-toast {
+  animation: toastIn 0.25s ease both;
+}
+
+.anim-pop {
+  animation: pop 0.5s ease;
+}

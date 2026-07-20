@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>認可設計 ｜ おうち掃除ログ 設計書</title>
+<meta name="description" content="おうち掃除ログの認可方針。認証済ユーザーと user_id によるデータ分離。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+</head>
+<body>
+<div class="wrap">
+  <aside id="sidePanel">
+    <div class="side-header">
+      <button type="button" class="side-toggle" id="sideToggle" aria-controls="sidePanel" aria-expanded="true" aria-label="メニューを閉じる" title="メニューを閉じる"><span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+      <div class="side-header-text">
+        <div class="brand"><a href="../index.html">設計書</a><small>おうち掃除ログ / sorosoro</small></div>
+        <div class="side-title"><a href="../index.html">おうち掃除ログ</a></div>
+      </div>
+    </div>
+    <nav class="side-nav" aria-label="ドキュメント一覧">
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#01_要件定義">01 要件定義</a></span>
+        <ol>
+          <li><a href="../01_要件定義/01_プロジェクト概要.html"><span class="n">01</span>プロジェクト概要</a></li>
+          <li><a href="../01_要件定義/02_ペルソナ・ユーザーストーリー.html"><span class="n">02</span>ペルソナ・ユーザーストーリー</a></li>
+          <li><a href="../01_要件定義/03_機能要件.html"><span class="n">03</span>機能要件</a></li>
+          <li><a href="../01_要件定義/04_非機能要件.html"><span class="n">04</span>非機能要件</a></li>
+        </ol>
+      </div>
+      <div class="phase is-current">
+        <span class="phase-label"><a href="../index.html#02_基本設計">02 基本設計</a></span>
+        <ol>
+          <li><a href="../02_基本設計/01_システム構成.html"><span class="n">01</span>システム構成</a></li>
+          <li><a href="../02_基本設計/02_用語集.html"><span class="n">02</span>用語集</a></li>
+          <li><a href="../02_基本設計/03_機能設計.html"><span class="n">03</span>機能設計</a></li>
+          <li><a href="../02_基本設計/04_画面設計.html"><span class="n">04</span>画面設計</a></li>
+          <li><a href="../02_基本設計/05_DB設計.html"><span class="n">05</span>DB設計(論理)</a></li>
+          <li><a href="../02_基本設計/06_API設計.html"><span class="n">06</span>API設計</a></li>
+          <li><a class="active" href="../02_基本設計/07_認可設計.html"><span class="n">07</span>認可設計</a></li>
+          <li><a href="../02_基本設計/adr/0000_ADRテンプレート.html"><span class="n">A0</span>ADR テンプレート</a></li>
+          <li><a href="../02_基本設計/adr/0001_技術スタック(テンプレート既定).html"><span class="n">A1</span>ADR-0001（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0002_ローカルファースト技術スタック.html"><span class="n">A2</span>ADR-0002（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0003_menva同型スタック(Vercel+Turso+BetterAuth).html"><span class="n">A3</span>ADR-0003 技術スタック</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#03_詳細設計">03 詳細設計</a></span>
+        <ol>
+          <li><a href="../03_詳細設計/01_処理設計.html"><span class="n">01</span>処理設計</a></li>
+          <li><a href="../03_詳細設計/02_テーブル定義.html"><span class="n">02</span>テーブル定義</a></li>
+          <li><a href="../03_詳細設計/03_単体テスト観点.html"><span class="n">03</span>単体テスト観点</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#04_テスト">04 テスト</a></span>
+        <ol>
+          <li><a href="../04_テスト/01_テスト計画.html"><span class="n">01</span>テスト計画</a></li>
+          <li><a href="../04_テスト/02_結合テストケース.html"><span class="n">02</span>結合テストケース</a></li>
+          <li><a href="../04_テスト/03_総合テストケース.html"><span class="n">03</span>総合テストケース</a></li>
+          <li><a href="../04_テスト/04_受け入れテストシナリオ.html"><span class="n">04</span>受け入れテストシナリオ</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#05_リリース">05 リリース</a></span>
+        <ol>
+          <li><a href="../05_リリース/01_リリース計画.html"><span class="n">01</span>リリース計画</a></li>
+          <li><a href="../05_リリース/02_リリースノート.html"><span class="n">02</span>リリースノート</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#06_運用">06 運用</a></span>
+        <ol>
+          <li><a href="../06_運用/01_監視・障害対応.html"><span class="n">01</span>監視・障害対応</a></li>
+          <li><a href="../06_運用/02_バックアップ・メンテナンス.html"><span class="n">02</span>バックアップ・メンテナンス</a></li>
+        </ol>
+      </div>
+    </nav>
+    <div class="side-meta">おうち掃除ログ / sorosoro<br>正本: PRODUCT_BRIEF · ADR-0003</div>
+  </aside>
+  <main>
+    <div class="hero">
+      <div class="kicker">02 基本設計 · 07/07</div>
+      <h1>認可設計書</h1>
+      <p class="lede">おうち掃除ログの認可方針。ロールは「認証済ユーザー」のみ。データは user_id で完全分離。MVP にマルチユーザー共有はない。</p>
+    </div>
+    <div class="prose">
+      <div class="callout">
+        <p class="callout-title">確定メモ</p>
+        <p>認証: Better Auth + Google OAuth。認可ルール: すべてのタスク/ログ操作は <code>session.user.id === tasks.user_id</code>。未認証は <code>/login</code> へ。世帯共有は OUT（PRODUCT_BRIEF OUT-01）。</p>
+      </div>
+
+      <h2>方針</h2>
+      <ul>
+        <li><strong>認証必須</strong> — アプリ画面（S-01〜S-04）はセッション Cookie が必要。</li>
+        <li><strong>ロールは1種</strong> — 管理者 / ゲストの区別はない。ログインした個人が自分のデータだけ操作する。</li>
+        <li><strong>データ分離</strong> — クエリ・更新は常に user_id でフィルタ。他ユーザーの taskId を指定しても見つからない扱い。</li>
+        <li><strong>共有なし</strong> — 招待・家族アカウント・同一タスクの複数編集は MVP 外。</li>
+      </ul>
+
+      <h2>ロール一覧</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">ロール</th>
+              <th scope="col">コード</th>
+              <th scope="col">説明</th>
+              <th scope="col">想定ユーザー</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>未認証</td><td><code>anonymous</code></td><td>ログイン画面のみ利用可</td><td>訪問者</td></tr>
+            <tr><td>認証済ユーザー</td><td><code>authenticated</code></td><td>自分の tasks / task_logs に対する全操作</td><td>Google ログイン済み個人</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>権限マトリクス</h2>
+      <p>◯=可、−=不可。</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">機能 / 操作</th>
+              <th scope="col">未認証</th>
+              <th scope="col">認証済（自分）</th>
+              <th scope="col">認証済（他人のデータ）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>ログイン画面閲覧</td><td>◯</td><td>→ /home リダイレクト</td><td>—</td></tr>
+            <tr><td>ホーム閲覧・タスク一覧</td><td>−（/login へ）</td><td>◯</td><td>−（一覧に出ない）</td></tr>
+            <tr><td>記録・アンドゥ</td><td>−</td><td>◯</td><td>−（見つからない）</td></tr>
+            <tr><td>タスク登録・編集・削除</td><td>−</td><td>◯</td><td>−</td></tr>
+            <tr><td>履歴閲覧</td><td>−</td><td>◯</td><td>−</td></tr>
+            <tr><td>シード（初回サンプル）</td><td>−</td><td>◯（自分の空状態のみ）</td><td>−</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>チェック実装</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">層</th>
+              <th scope="col">仕組み</th>
+              <th scope="col">振る舞い</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Middleware</td>
+              <td><code>src/middleware.ts</code></td>
+              <td>Cookie なしで <code>/home</code>・<code>/app</code> → <code>/login?callbackUrl=...</code>。Cookie ありで <code>/login</code> → <code>/home</code></td>
+            </tr>
+            <tr>
+              <td>ページ</td>
+              <td><code>getServerSession()</code></td>
+              <td><code>/home</code> でセッション無ければリダイレクト</td>
+            </tr>
+            <tr>
+              <td>Server Actions</td>
+              <td><code>requireUserId()</code></td>
+              <td>無ければ <code>Error("UNAUTHORIZED")</code> → クライアントへ「ログインが必要です」</td>
+            </tr>
+            <tr>
+              <td>データアクセス</td>
+              <td><code>eq(tasks.userId, userId)</code></td>
+              <td>list / update / delete / record / undo すべて所有確認</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>セッション</h2>
+      <ul>
+        <li>発行: Better Auth（Google OAuth 成功時）</li>
+        <li>Cookie: <code>better-auth.session_token</code>（本番 Secure 時は <code>__Secure-better-auth.session_token</code>）</li>
+        <li>cookieCache: 有効、maxAge 5 分（<code>src/lib/auth.ts</code>）</li>
+        <li>信頼オリジン: <code>BETTER_AUTH_URL</code> / <code>NEXT_PUBLIC_BETTER_AUTH_URL</code></li>
+      </ul>
+
+      <h2>将来メモ</h2>
+      <p>世帯共有を導入する場合は、(1) リソース所有者と共有メンバーの明示モデル、(2) サーバー側での共有権限チェック、(3) 責めない UI を維持した催促なし設計、を新規 ADR で決める。MVP マトリクスは個人完結のままとする。</p>
+    </div>
+    <nav class="page-nav">
+      <a class="page-nav-item" href="06_API設計.html"><span class="page-nav-dir">← 前</span><span class="page-nav-title">API設計</span><span class="page-nav-phase">02 基本設計</span></a>
+      <a class="page-nav-item page-nav-next" href="adr/0000_ADRテンプレート.html"><span class="page-nav-dir">次 →</span><span class="page-nav-title">ADR テンプレート</span><span class="page-nav-phase">02 基本設計</span></a>
+    </nav>
+    <div class="foot">おうち掃除ログ 設計書 · <a href="../index.html">インデックス</a></div>
+  </main>
+</div>
+<dialog class="zoom-dlg" id="zoomDlg">
+  <div class="zoom-bar">
+    <span class="title">図解</span>
+    <button type="button" data-z="out" title="縮小">−</button>
+    <button type="button" data-z="in" title="拡大">＋</button>
+    <button type="button" data-z="reset" title="全体表示">リセット</button>
+    <button type="button" data-z="close" title="閉じる">閉じる ✕</button>
+  </div>
+  <div class="zoom-stage" id="zoomStage"></div>
+</dialog>
+<script src="../assets/nav.js" defer></script>
+<script src="../assets/enhance.js" defer></script>
+</body>
+</html>

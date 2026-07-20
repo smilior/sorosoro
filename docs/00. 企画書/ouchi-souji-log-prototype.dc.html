@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN',sans-serif;background:var(--desk);transition:background .3s;color-scheme:light;
+--desk:#E9E3D5;--bg:#F6F2EA;--card:#FFFFFF;--ink:#453F35;--sub:#8C8370;--line:#EAE3D4;
+--accent:#6FA378;
+--accent-ink:color-mix(in oklab,var(--accent) 62%,#233326);
+--accent-soft:color-mix(in oklab,var(--accent) 14%,#FFFFFF);
+--accent-bright:color-mix(in oklab,var(--accent) 55%,#FFFFFF);
+--warn-bg:#F8EFD3;--warn-ink:#95762A;--late-bg:#F8E5DA;--late-ink:#B0654A;
+--sheet:#FFFFFF;--toast-bg:#39342B;--toast-c:#FBF8F2;--del:#BC6248;}
+body.dark{color-scheme:dark;
+--desk:#141210;--bg:#201E19;--card:#2B2822;--ink:#EAE4D6;--sub:#A29882;--line:#3A362D;
+--accent-ink:color-mix(in oklab,var(--accent) 60%,#EAF2EA);
+--accent-soft:color-mix(in oklab,var(--accent) 20%,#2B2822);
+--warn-bg:#37301C;--warn-ink:#CDA94E;--late-bg:#3C2A20;--late-ink:#D88F70;
+--sheet:#2B2822;--toast-bg:#EDE7D9;--toast-c:#2B2822;--del:#D88F70;}
+a{color:var(--accent-ink)}a:hover{color:var(--accent)}
+button,input{font-family:inherit}
+input::placeholder{color:#BDB4A2}
+@keyframes screenIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes sheetUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.1)}100%{transform:scale(1)}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;box-sizing:border-box">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ isDark }}" hint-size="402px,874px">
+<div style="position:relative;height:100%;font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN',sans-serif;background:var(--bg);color:var(--ink);overflow:hidden;display:flex;flex-direction:column;transition:background .3s,color .3s">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="ホーム" style="display:flex;flex-direction:column;height:100%;animation:screenIn .22s ease both">
+  <div style="padding:72px 20px 10px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+    <div style="min-width:0">
+      <div style="font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.08em">おうち掃除ログ</div>
+      <div style="font-size:22px;font-weight:700;margin-top:2px">{{ todayLabel }}</div>
+    </div>
+    <button aria-label="タスクを追加" onClick="{{ openAdd }}" style="width:44px;height:44px;border-radius:16px;border:none;background:var(--accent-soft);color:var(--accent-ink);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .3s" style-active="transform:scale(.92)">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3.5v13M3.5 10h13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path></svg>
+    </button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:10px 16px 90px;display:flex;flex-direction:column;gap:10px">
+    <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="4">
+      <div ref="{{ t.cardRef }}" onClick="{{ t.open }}" style="background:{{ t.bg }};border-radius:20px;padding:15px 14px 15px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background-color .5s ease,transform .15s ease;box-shadow:0 1px 3px rgba(80,70,55,.06)" style-active="transform:scale(.985)">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:16px;font-weight:700;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.name }}</div>
+          <div style="font-size:12.5px;margin-top:4px;color:var(--sub);font-weight:500">{{ t.pre }}<span style="color:{{ t.emColor }};font-weight:700">{{ t.em }}</span>{{ t.post }}</div>
+        </div>
+        <button onClick="{{ t.done }}" onPointerDown="{{ t.pDown }}" onPointerUp="{{ t.pUp }}" onPointerLeave="{{ t.pUp }}" onPointerCancel="{{ t.pUp }}" onContextMenu="{{ t.noCtx }}" style="min-height:44px;border:none;border-radius:14px;padding:0 13px;display:flex;align-items:center;gap:6px;background:{{ t.btnBg }};color:{{ t.btnC }};font-size:13.5px;font-weight:700;cursor:pointer;flex-shrink:0;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transition:background-color .3s ease,transform .15s ease;animation:{{ t.btnAnim }}" style-active="transform:scale(.94)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4.5 12.5l5 5L19.5 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span>{{ t.btnLabel }}</span>
+        </button>
+      </div>
+    </sc-for>
+    <sc-if value="{{ hasTasks }}" hint-placeholder-val="{{ true }}">
+      <div style="text-align:center;font-size:11.5px;color:var(--sub);opacity:.75;padding:12px 0 0;font-weight:500">「今日やった」を長押しすると、過去の日付でも記録できます</div>
+    </sc-if>
+    <sc-if value="{{ noTasks }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:70px 24px;color:var(--sub)">
+        <div style="font-size:15px;font-weight:700">まだタスクがありません</div>
+        <div style="font-size:12.5px;margin-top:8px;line-height:1.8;font-weight:500">右上の＋から、気になる掃除を<br>登録してみましょう</div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isEdit }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="タスク登録・編集" style="display:flex;flex-direction:column;height:100%;animation:screenIn .22s ease both">
+  <div style="padding:66px 16px 8px;display:flex;align-items:center;gap:10px">
+    <button aria-label="もどる" onClick="{{ backEdit }}" style="width:38px;height:38px;border-radius:14px;border:none;background:var(--card);color:var(--sub);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 1px 3px rgba(80,70,55,.08)" style-active="transform:scale(.92)">
+      <svg width="9" height="16" viewBox="0 0 10 18" fill="none"><path d="M8.5 1.5L1.5 9l7 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+    <div style="font-size:18px;font-weight:700">{{ editTitle }}</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:14px 20px 20px">
+    <div style="font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em">タスク名</div>
+    <input value="{{ fName }}" onChange="{{ onName }}" placeholder="例：シーツ洗い" style="width:100%;box-sizing:border-box;margin-top:8px;padding:14px 16px;border-radius:16px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font-size:16px;font-weight:500;outline:none;transition:border-color .2s" style-focus="border-color:var(--accent)">
+    <div style="font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;margin-top:28px">目安の周期</div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <sc-for list="{{ presets }}" as="p" hint-placeholder-count="3">
+        <button onClick="{{ p.pick }}" style="flex:1;padding:11px 4px;border-radius:14px;border:1.5px solid {{ p.bd }};background:{{ p.bg }};color:{{ p.c }};cursor:pointer;display:flex;flex-direction:column;gap:1px;align-items:center;transition:all .15s">
+          <span style="font-size:13.5px;font-weight:700">{{ p.label }}</span>
+          <span style="font-size:10.5px;font-weight:500;opacity:.75">{{ p.days }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:14px">
+      <input type="number" inputMode="numeric" min="1" max="365" value="{{ fCycle }}" onChange="{{ onCycle }}" style="width:86px;box-sizing:border-box;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font-size:16px;font-weight:700;outline:none;text-align:center;transition:border-color .2s" style-focus="border-color:var(--accent)">
+      <span style="font-size:14px;color:var(--sub);font-weight:500">日ごと</span>
+    </div>
+    <div style="font-size:12px;color:var(--sub);margin-top:14px;line-height:1.7;font-weight:500">きっちり守れなくても大丈夫。あくまで「目安」です。あとからいつでも変えられます。</div>
+    <sc-if value="{{ showDelBtn }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:44px;border-top:1px solid var(--line);padding-top:8px">
+        <button onClick="{{ delAsk }}" style="width:100%;padding:14px;border:none;background:none;color:var(--del);font-size:14px;font-weight:700;cursor:pointer;border-radius:14px" style-active="opacity:.7">このタスクを削除</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showDelConfirm }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:44px;border-top:1px solid var(--line);padding-top:20px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:13.5px;font-weight:700;flex:1">履歴ごと削除します。よい？</span>
+        <button onClick="{{ delYes }}" style="padding:11px 16px;border:none;border-radius:13px;background:var(--del);color:#FFF9F5;font-size:13.5px;font-weight:700;cursor:pointer" style-active="transform:scale(.95)">削除する</button>
+        <button onClick="{{ delNo }}" style="padding:11px 14px;border:none;border-radius:13px;background:var(--card);color:var(--sub);font-size:13.5px;font-weight:700;cursor:pointer;box-shadow:0 1px 3px rgba(80,70,55,.08)" style-active="transform:scale(.95)">やめる</button>
+      </div>
+    </sc-if>
+  </div>
+  <div style="padding:0 20px 46px">
+    <button onClick="{{ saveTask }}" disabled="{{ saveDisabled }}" style="width:100%;padding:16px;border:none;border-radius:18px;background:{{ saveBg }};color:{{ saveC }};font-size:16px;font-weight:700;cursor:pointer;transition:background-color .2s;letter-spacing:.04em" style-active="transform:scale(.98)">保存する</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isHistory }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="履歴" style="display:flex;flex-direction:column;height:100%;animation:screenIn .22s ease both">
+  <div style="padding:66px 16px 8px;display:flex;align-items:center;gap:10px">
+    <button aria-label="もどる" onClick="{{ backHistory }}" style="width:38px;height:38px;border-radius:14px;border:none;background:var(--card);color:var(--sub);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 1px 3px rgba(80,70,55,.08)" style-active="transform:scale(.92)">
+      <svg width="9" height="16" viewBox="0 0 10 18" fill="none"><path d="M8.5 1.5L1.5 9l7 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+    <div style="font-size:18px;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ vName }}</div>
+    <button onClick="{{ openEditFromHistory }}" style="padding:9px 14px;border:none;border-radius:12px;background:var(--accent-soft);color:var(--accent-ink);font-size:13.5px;font-weight:700;cursor:pointer;flex-shrink:0" style-active="transform:scale(.95)">編集</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:10px 20px 46px">
+    <div style="background:var(--card);border-radius:20px;padding:16px 18px;display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:8px;box-shadow:0 1px 3px rgba(80,70,55,.06)">
+      <div>
+        <div style="font-size:10.5px;font-weight:700;color:var(--sub);letter-spacing:.05em">目安の周期</div>
+        <div style="font-size:14.5px;font-weight:700;margin-top:4px">{{ vCycle }}</div>
+      </div>
+      <div>
+        <div style="font-size:10.5px;font-weight:700;color:var(--sub);letter-spacing:.05em">前回</div>
+        <div style="font-size:14.5px;font-weight:700;margin-top:4px">{{ vLast }}</div>
+      </div>
+      <div>
+        <div style="font-size:10.5px;font-weight:700;color:var(--sub);letter-spacing:.05em">次の目安</div>
+        <div style="font-size:14.5px;font-weight:700;margin-top:4px">{{ vNext }}</div>
+      </div>
+    </div>
+    <button onClick="{{ histRecord }}" style="width:100%;margin-top:12px;padding:13px;border:none;border-radius:16px;background:var(--accent-soft);color:var(--accent-ink);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px" style-active="transform:scale(.98)">
+      <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M10 3.5v13M3.5 10h13" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg>
+      <span>日付を選んで記録</span>
+    </button>
+    <div style="font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;margin:26px 8px 8px">これまでの記録・{{ vCount }}</div>
+    <div style="background:var(--card);border-radius:20px;overflow:hidden;box-shadow:0 1px 3px rgba(80,70,55,.06)">
+      <sc-for list="{{ vLogs }}" as="g" hint-placeholder-count="3">
+        <div style="padding:13px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid {{ g.line }}">
+          <span style="font-size:14px;font-weight:600">{{ g.date }}</span>
+          <span style="font-size:12.5px;color:var(--sub);font-weight:500">{{ g.ago }}</span>
+        </div>
+      </sc-for>
+      <sc-if value="{{ vEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:26px;text-align:center;font-size:13px;color:var(--sub);font-weight:500">まだ記録がありません</div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:30">
+  <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(42,36,28,.34);animation:fadeIn .2s ease both"></div>
+  <div style="position:absolute;left:8px;right:8px;bottom:8px;background:var(--sheet);border-radius:28px;padding:20px 20px 24px;animation:sheetUp .28s cubic-bezier(.2,.9,.3,1) both;box-shadow:0 -8px 40px rgba(0,0,0,.14)">
+    <div style="width:36px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px"></div>
+    <div style="font-size:16px;font-weight:700">日付を選んで記録</div>
+    <div style="font-size:12.5px;color:var(--sub);margin-top:2px;font-weight:500">{{ sheetName }}</div>
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <sc-for list="{{ quicks }}" as="q" hint-placeholder-count="3">
+        <button onClick="{{ q.pick }}" style="flex:1;padding:12px 4px;border-radius:13px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-size:13.5px;font-weight:700;cursor:pointer" style-active="transform:scale(.95)">{{ q.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+      <input type="date" value="{{ sheetDate }}" max="{{ todayISO }}" onChange="{{ onSheetDate }}" style="flex:1;box-sizing:border-box;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font-size:15px;font-weight:500;outline:none" style-focus="border-color:var(--accent)">
+      <button onClick="{{ sheetConfirm }}" style="padding:13px 18px;border:none;border-radius:14px;background:var(--accent);color:#FFFFFF;font-size:14px;font-weight:700;cursor:pointer;flex-shrink:0" style-active="transform:scale(.96)">この日で記録</button>
+    </div>
+    <button onClick="{{ closeSheet }}" style="width:100%;margin-top:10px;padding:12px;border:none;background:none;color:var(--sub);font-size:13.5px;font-weight:700;cursor:pointer;border-radius:12px" style-active="opacity:.6">キャンセル</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;bottom:44px;z-index:40;display:flex;justify-content:center;pointer-events:none">
+  <div style="pointer-events:auto;background:var(--toast-bg);color:var(--toast-c);border-radius:16px;padding:11px 16px;display:flex;align-items:center;gap:14px;font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.18);animation:toastIn .25s cubic-bezier(.2,.9,.3,1) both;max-width:100%">
+    <span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ toastMsg }}</span>
+    <sc-if value="{{ toastUndo }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ undo }}" style="border:none;background:none;color:var(--accent-bright);font-weight:700;font-size:13px;cursor:pointer;padding:0;flex-shrink:0">元に戻す</button>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:470,&quot;height&quot;:950},&quot;darkMode&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;テーマ&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#6FA378&quot;,&quot;options&quot;:[&quot;#6FA378&quot;,&quot;#7292C4&quot;,&quot;#CE9A6B&quot;,&quot;#B08BB5&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;テーマ&quot;}}">
+class Component extends DCLogic {
+  state = { tasks: [], screen: 'home', viewId: null, editId: null, editFrom: 'home',
+    fName: '', fCycle: '7', confirmDel: false,
+    sheetTask: null, sheetDate: '', toast: null, doneFlash: {} };
+  LS = 'ouchi-souji-log-v1';
+  _h = {}; _els = new Map(); _ft = {};
+
+  componentDidMount() {
+    let tasks = null;
+    try { const raw = localStorage.getItem(this.LS); if (raw) tasks = JSON.parse(raw).tasks; } catch (e) {}
+    if (!tasks || !Array.isArray(tasks)) tasks = this.seed();
+    this.setState({ tasks });
+    this.applyTheme();
+  }
+  componentWillUnmount() {
+    clearTimeout(this._tt);
+    Object.values(this._ft).forEach(clearTimeout);
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.darkMode !== this.props.darkMode || prevProps.accent !== this.props.accent) this.applyTheme();
+    if (this._flip) {
+      const rects = this._flip; this._flip = null;
+      this._els.forEach((el, id) => {
+        const old = rects.get(id); if (!el || old == null) return;
+        const d = old - el.getBoundingClientRect().top;
+        if (Math.abs(d) > 3) el.animate(
+          [{ transform: 'translateY(' + d + 'px)' }, { transform: 'translateY(0)' }],
+          { duration: 480, easing: 'cubic-bezier(.22,.9,.32,1)' });
+      });
+    }
+  }
+  applyTheme() {
+    document.body.classList.toggle('dark', !!this.props.darkMode);
+    document.body.style.setProperty('--accent', this.props.accent ?? '#6FA378');
+  }
+  seed() {
+    const mk = (name, cycle, days) => ({ id: name, name, cycle, logs: days.map(n => this.fmt(this.addDays(new Date(), -n))) });
+    return [
+      mk('シーツ洗い', 7, [12, 20, 26]),
+      mk('風呂の排水口', 14, [16, 31, 44]),
+      mk('掃除機がけ', 7, [8, 14, 22]),
+      mk('トイレ掃除', 3, [1, 4, 8]),
+      mk('冷蔵庫の中拭き', 30, [10, 42]),
+      mk('洗濯槽クリーナー', 60, [41]),
+    ];
+  }
+  save(tasks) { try { localStorage.setItem(this.LS, JSON.stringify({ tasks })); } catch (e) {} }
+  addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  fmt(d) { const p = n => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+  parse(s) { const a = s.split('-').map(Number); return new Date(a[0], a[1] - 1, a[2]); }
+  daysAgo(s) { const t = new Date(); return Math.round((new Date(t.getFullYear(), t.getMonth(), t.getDate()) - this.parse(s)) / 864e5); }
+  jp(d, y) { return (y ? d.getFullYear() + '年' : '') + (d.getMonth() + 1) + '月' + d.getDate() + '日（' + '日月火水木金土'[d.getDay()] + '）'; }
+  jpShort(d) { return (d.getMonth() + 1) + '月' + d.getDate() + '日'; }
+
+  derive(t) {
+    const logs = [...t.logs].sort();
+    const last = logs[logs.length - 1] || null;
+    const elapsed = last ? this.daysAgo(last) : null;
+    const ratio = last ? elapsed / t.cycle : 1;
+    const st = !last ? 'none' : ratio >= 1.5 ? 'late' : ratio > 1 ? 'warn' : 'ok';
+    return { last, elapsed, ratio, st };
+  }
+  captureFlip() {
+    const m = new Map();
+    this._els.forEach((el, id) => { if (el) m.set(id, el.getBoundingClientRect().top); });
+    this._flip = m;
+  }
+  record(id, dateStr) {
+    const t = this.state.tasks.find(x => x.id === id); if (!t || !dateStr) return;
+    if (t.logs.includes(dateStr)) { this.showToast('その日はすでに記録済みです', null); this.setState({ sheetTask: null }); return; }
+    this.captureFlip();
+    const tasks = this.state.tasks.map(x => x.id === id ? { ...x, logs: [...x.logs, dateStr].sort() } : x);
+    this.setState({ tasks, doneFlash: { ...this.state.doneFlash, [id]: 1 }, sheetTask: null });
+    this.save(tasks);
+    clearTimeout(this._ft[id]);
+    this._ft[id] = setTimeout(() => {
+      const f = { ...this.state.doneFlash }; delete f[id]; this.setState({ doneFlash: f });
+    }, 1100);
+    const label = dateStr === this.fmt(new Date()) ? '今日' : this.jpShort(this.parse(dateStr));
+    this.showToast('「' + t.name + '」を記録しました（' + label + '）', { id, date: dateStr });
+  }
+  showToast(msg, undoInfo) {
+    clearTimeout(this._tt);
+    this.setState({ toast: { msg, undo: undoInfo } });
+    this._tt = setTimeout(() => this.setState({ toast: null }), 3800);
+  }
+  undo() {
+    const u = this.state.toast && this.state.toast.undo; if (!u) return;
+    this.captureFlip();
+    const tasks = this.state.tasks.map(x => x.id === u.id ? { ...x, logs: x.logs.filter(d => d !== u.date) } : x);
+    clearTimeout(this._tt);
+    this.setState({ tasks, toast: null });
+    this.save(tasks);
+  }
+  handlers(id) {
+    if (this._h[id]) return this._h[id];
+    let longFired = false, timer = null;
+    const h = {
+      cardRef: el => { if (el) this._els.set(id, el); else this._els.delete(id); },
+      open: () => this.setState({ screen: 'history', viewId: id }),
+      done: e => { e.stopPropagation(); if (longFired) { longFired = false; return; } this.record(id, this.fmt(new Date())); },
+      pDown: e => { e.stopPropagation(); longFired = false; clearTimeout(timer); timer = setTimeout(() => { longFired = true; this.openSheet(id); }, 480); },
+      pUp: () => clearTimeout(timer),
+      noCtx: e => e.preventDefault(),
+    };
+    this._h[id] = h; return h;
+  }
+  openSheet(id) { this.setState({ sheetTask: id, sheetDate: this.fmt(new Date()) }); }
+  saveTask() {
+    const s = this.state, name = s.fName.trim();
+    let cyc = parseInt(s.fCycle, 10);
+    if (!name || !(cyc >= 1)) return;
+    cyc = Math.min(cyc, 365);
+    let tasks;
+    if (s.editId != null) tasks = s.tasks.map(x => x.id === s.editId ? { ...x, name, cycle: cyc } : x);
+    else tasks = [...s.tasks, { id: 't' + Date.now(), name, cycle: cyc, logs: [] }];
+    this.save(tasks);
+    this.setState({ tasks, screen: s.editId != null && s.editFrom === 'history' ? 'history' : 'home' });
+  }
+  deleteTask() {
+    const s = this.state, t = s.tasks.find(x => x.id === s.editId);
+    const tasks = s.tasks.filter(x => x.id !== s.editId);
+    this.save(tasks);
+    this.setState({ tasks, screen: 'home', viewId: null, confirmDel: false });
+    if (t) this.showToast('「' + t.name + '」を削除しました', null);
+  }
+
+  renderVals() {
+    const s = this.state, now = new Date(), todayISO = this.fmt(now);
+    const sorted = [...s.tasks].map(t => ({ t, d: this.derive(t) }))
+      .sort((a, b) => (b.d.ratio - a.d.ratio) || ((b.d.elapsed ?? 0) - (a.d.elapsed ?? 0)));
+    const tasks = sorted.map(({ t, d }) => {
+      const flash = s.doneFlash[t.id];
+      const doneToday = t.logs.includes(todayISO);
+      return Object.assign({
+        id: t.id, name: t.name,
+        pre: d.last ? '前回から' : '',
+        em: d.last ? d.elapsed + '日' : 'まだ記録なし',
+        post: '・目安' + t.cycle + '日',
+        emColor: d.st === 'late' ? 'var(--late-ink)' : d.st === 'warn' ? 'var(--warn-ink)' : d.last ? 'var(--ink)' : 'var(--sub)',
+        bg: flash ? 'var(--accent-soft)' : d.st === 'late' ? 'var(--late-bg)' : d.st === 'warn' ? 'var(--warn-bg)' : 'var(--card)',
+        btnBg: doneToday ? 'var(--accent)' : 'var(--accent-soft)',
+        btnC: doneToday ? '#FFFFFF' : 'var(--accent-ink)',
+        btnLabel: doneToday ? '記録済み' : '今日やった',
+        btnAnim: flash ? 'pop .5s ease' : 'none',
+      }, this.handlers(t.id));
+    });
+    const editing = s.editId != null;
+    const cyc = parseInt(s.fCycle, 10);
+    const presets = [['毎週', 7], ['隔週', 14], ['毎月', 30]].map(([label, n]) => ({
+      label, days: n + '日ごと',
+      pick: () => this.setState({ fCycle: String(n) }),
+      bg: cyc === n ? 'var(--accent-soft)' : 'var(--card)',
+      c: cyc === n ? 'var(--accent-ink)' : 'var(--sub)',
+      bd: cyc === n ? 'var(--accent)' : 'var(--line)',
+    }));
+    const canSave = !!s.fName.trim() && cyc >= 1;
+    const vt = s.tasks.find(x => x.id === s.viewId);
+    const vd = vt ? this.derive(vt) : null;
+    const vLogs = vt ? [...vt.logs].sort().reverse().map((ds, i, arr) => {
+      const dd = this.parse(ds), n = this.daysAgo(ds);
+      return {
+        date: this.jp(dd, dd.getFullYear() !== now.getFullYear()),
+        ago: n === 0 ? '今日' : n === 1 ? '昨日' : n + '日前',
+        line: i === arr.length - 1 ? 'transparent' : 'var(--line)',
+      };
+    }) : [];
+    const sheetT = s.tasks.find(x => x.id === s.sheetTask);
+    const quicks = [['今日', 0], ['昨日', 1], ['おととい', 2]].map(([label, n]) => ({
+      label, pick: () => this.record(s.sheetTask, this.fmt(this.addDays(new Date(), -n))),
+    }));
+    return {
+      isDark: !!this.props.darkMode,
+      isHome: s.screen === 'home', isEdit: s.screen === 'edit', isHistory: s.screen === 'history',
+      todayLabel: this.jp(now), todayISO,
+      tasks, hasTasks: s.tasks.length > 0, noTasks: s.tasks.length === 0,
+      openAdd: () => this.setState({ screen: 'edit', editId: null, fName: '', fCycle: '7', confirmDel: false, editFrom: 'home' }),
+      editTitle: editing ? 'タスクを編集' : 'タスクを追加',
+      fName: s.fName, fCycle: s.fCycle,
+      onName: e => this.setState({ fName: e.target.value }),
+      onCycle: e => this.setState({ fCycle: e.target.value }),
+      presets,
+      saveDisabled: !canSave,
+      saveBg: canSave ? 'var(--accent)' : 'var(--line)',
+      saveC: canSave ? '#FFFFFF' : 'var(--sub)',
+      saveTask: () => this.saveTask(),
+      backEdit: () => this.setState({ screen: s.editFrom === 'history' && s.editId != null ? 'history' : 'home' }),
+      showDelBtn: editing && !s.confirmDel,
+      showDelConfirm: editing && s.confirmDel,
+      delAsk: () => this.setState({ confirmDel: true }),
+      delNo: () => this.setState({ confirmDel: false }),
+      delYes: () => this.deleteTask(),
+      vName: vt ? vt.name : '',
+      vCycle: vt ? vt.cycle + '日ごと' : '',
+      vLast: vd && vd.last ? (vd.elapsed === 0 ? '今日' : vd.elapsed + '日前') : 'まだなし',
+      vNext: vd && vd.last ? this.jpShort(this.addDays(this.parse(vd.last), vt.cycle)) + 'ごろ' : '—',
+      vCount: vLogs.length + '回', vLogs, vEmpty: vLogs.length === 0,
+      backHistory: () => this.setState({ screen: 'home' }),
+      openEditFromHistory: () => vt && this.setState({ screen: 'edit', editId: vt.id, fName: vt.name, fCycle: String(vt.cycle), confirmDel: false, editFrom: 'history' }),
+      histRecord: () => vt && this.openSheet(vt.id),
+      sheetOpen: !!s.sheetTask, sheetName: sheetT ? sheetT.name : '', sheetDate: s.sheetDate,
+      onSheetDate: e => this.setState({ sheetDate: e.target.value }),
+      sheetConfirm: () => { if (s.sheetDate && s.sheetDate <= todayISO) this.record(s.sheetTask, s.sheetDate); },
+      closeSheet: () => this.setState({ sheetTask: null }),
+      quicks,
+      toastOn: !!s.toast, toastMsg: s.toast ? s.toast.msg : '',
+      toastUndo: !!(s.toast && s.toast.undo),
+      undo: () => this.undo(),
+    };
+  }
+}
+</script>
+</body>
+</html>

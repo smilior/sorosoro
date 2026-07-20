@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>機能設計 ｜ おうち掃除ログ 設計書</title>
+<meta name="description" content="おうち掃除ログの各機能を外部から見た振る舞いとして定義する。F-00〜F-08。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+</head>
+<body>
+<div class="wrap">
+  <aside id="sidePanel">
+    <div class="side-header">
+      <button type="button" class="side-toggle" id="sideToggle" aria-controls="sidePanel" aria-expanded="true" aria-label="メニューを閉じる" title="メニューを閉じる"><span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+      <div class="side-header-text">
+        <div class="brand"><a href="../index.html">設計書</a><small>おうち掃除ログ / sorosoro</small></div>
+        <div class="side-title"><a href="../index.html">おうち掃除ログ</a></div>
+      </div>
+    </div>
+    <nav class="side-nav" aria-label="ドキュメント一覧">
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#01_要件定義">01 要件定義</a></span>
+        <ol>
+          <li><a href="../01_要件定義/01_プロジェクト概要.html"><span class="n">01</span>プロジェクト概要</a></li>
+          <li><a href="../01_要件定義/02_ペルソナ・ユーザーストーリー.html"><span class="n">02</span>ペルソナ・ユーザーストーリー</a></li>
+          <li><a href="../01_要件定義/03_機能要件.html"><span class="n">03</span>機能要件</a></li>
+          <li><a href="../01_要件定義/04_非機能要件.html"><span class="n">04</span>非機能要件</a></li>
+        </ol>
+      </div>
+      <div class="phase is-current">
+        <span class="phase-label"><a href="../index.html#02_基本設計">02 基本設計</a></span>
+        <ol>
+          <li><a href="../02_基本設計/01_システム構成.html"><span class="n">01</span>システム構成</a></li>
+          <li><a href="../02_基本設計/02_用語集.html"><span class="n">02</span>用語集</a></li>
+          <li><a class="active" href="../02_基本設計/03_機能設計.html"><span class="n">03</span>機能設計</a></li>
+          <li><a href="../02_基本設計/04_画面設計.html"><span class="n">04</span>画面設計</a></li>
+          <li><a href="../02_基本設計/05_DB設計.html"><span class="n">05</span>DB設計(論理)</a></li>
+          <li><a href="../02_基本設計/06_API設計.html"><span class="n">06</span>API設計</a></li>
+          <li><a href="../02_基本設計/07_認可設計.html"><span class="n">07</span>認可設計</a></li>
+          <li><a href="../02_基本設計/adr/0000_ADRテンプレート.html"><span class="n">A0</span>ADR テンプレート</a></li>
+          <li><a href="../02_基本設計/adr/0001_技術スタック(テンプレート既定).html"><span class="n">A1</span>ADR-0001（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0002_ローカルファースト技術スタック.html"><span class="n">A2</span>ADR-0002（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0003_menva同型スタック(Vercel+Turso+BetterAuth).html"><span class="n">A3</span>ADR-0003 技術スタック</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#03_詳細設計">03 詳細設計</a></span>
+        <ol>
+          <li><a href="../03_詳細設計/01_処理設計.html"><span class="n">01</span>処理設計</a></li>
+          <li><a href="../03_詳細設計/02_テーブル定義.html"><span class="n">02</span>テーブル定義</a></li>
+          <li><a href="../03_詳細設計/03_単体テスト観点.html"><span class="n">03</span>単体テスト観点</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#04_テスト">04 テスト</a></span>
+        <ol>
+          <li><a href="../04_テスト/01_テスト計画.html"><span class="n">01</span>テスト計画</a></li>
+          <li><a href="../04_テスト/02_結合テストケース.html"><span class="n">02</span>結合テストケース</a></li>
+          <li><a href="../04_テスト/03_総合テストケース.html"><span class="n">03</span>総合テストケース</a></li>
+          <li><a href="../04_テスト/04_受け入れテストシナリオ.html"><span class="n">04</span>受け入れテストシナリオ</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#05_リリース">05 リリース</a></span>
+        <ol>
+          <li><a href="../05_リリース/01_リリース計画.html"><span class="n">01</span>リリース計画</a></li>
+          <li><a href="../05_リリース/02_リリースノート.html"><span class="n">02</span>リリースノート</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#06_運用">06 運用</a></span>
+        <ol>
+          <li><a href="../06_運用/01_監視・障害対応.html"><span class="n">01</span>監視・障害対応</a></li>
+          <li><a href="../06_運用/02_バックアップ・メンテナンス.html"><span class="n">02</span>バックアップ・メンテナンス</a></li>
+        </ol>
+      </div>
+    </nav>
+    <div class="side-meta">おうち掃除ログ / sorosoro<br>正本: PRODUCT_BRIEF · ADR-0003</div>
+  </aside>
+  <main>
+    <div class="hero">
+      <div class="kicker">02 基本設計 · 03/07</div>
+      <h1>機能設計書</h1>
+      <p class="lede">おうち掃除ログの各機能を外部から見た振る舞いとして定義する。Google ログイン必須・ユーザー単位で Turso に永続化。</p>
+    </div>
+    <div class="prose">
+      <div class="callout">
+        <p class="callout-title">確定メモ</p>
+        <p>内部アルゴリズムの詳細は 03_詳細設計/01_処理設計 へ。ここでは外部仕様と受け入れ基準（Given-When-Then）のみ。実装の正は <code>src/actions/tasks.ts</code> と <code>src/lib/domain/task.ts</code>。</p>
+      </div>
+
+      <h2>機能一覧</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">機能ID</th>
+              <th scope="col">機能名</th>
+              <th scope="col">概要</th>
+              <th scope="col">対応画面</th>
+              <th scope="col">ロール</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>F-00</td><td>Google ログイン / ログアウト</td><td>Better Auth + Google OAuth。セッション Cookie 発行・破棄</td><td>S-00</td><td>未認証 / 認証済</td></tr>
+            <tr><td>F-01</td><td>タスク一覧</td><td>ホームに ratio ソート済みタスクを状態色付きで表示</td><td>S-01</td><td>認証済</td></tr>
+            <tr><td>F-02</td><td>1タップ記録（今日）</td><td>「今日やった」で当日を task_logs に追加。達成フィードバック</td><td>S-01</td><td>認証済</td></tr>
+            <tr><td>F-03</td><td>過去日記録</td><td>長押しまたは履歴から記録シートで過去日を記録</td><td>S-01 / S-03 / S-04</td><td>認証済</td></tr>
+            <tr><td>F-04</td><td>記録アンドゥ</td><td>トーストから直前1件の記録を削除</td><td>共通トースト</td><td>認証済</td></tr>
+            <tr><td>F-05</td><td>タスク登録</td><td>名前 + 周期プリセット/数値で新規タスク</td><td>S-02</td><td>認証済</td></tr>
+            <tr><td>F-06</td><td>タスク編集・削除</td><td>名前・周期変更。削除は履歴ごと二段確認</td><td>S-02</td><td>認証済</td></tr>
+            <tr><td>F-07</td><td>履歴画面</td><td>サマリーと実施日リスト。日付選択記録導線</td><td>S-03</td><td>認証済</td></tr>
+            <tr><td>F-08</td><td>クラウド永続化</td><td>Turso にユーザー単位で保存・復元。初回シード</td><td>全アプリ画面</td><td>認証済</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>共通ルール（ratio・ソート・状態）</h2>
+      <ul>
+        <li><code>lastDone</code> = logs の最新日（なければ null）</li>
+        <li><code>elapsedDays</code> = today − lastDone（日付単位。未記録は null）</li>
+        <li><code>ratio</code> = logs 空 → 1.0 / それ以外 → elapsedDays / cycleDays</li>
+        <li><code>nextDue</code> = lastDone + cycleDays（未記録は null）</li>
+        <li>並び順: ratio 降順 → 同率は elapsedDays 降順（未記録の elapsed は最大扱い）→ 同率は名前 ja localeCompare</li>
+        <li>状態: ratio ≥ 1.5 → late / ratio &gt; 1 → warn / それ以外 → normal。警告アイコン・強い赤は禁止</li>
+        <li>記録: 同日重複はブロック。未来日は不可。固定スケジュール・未消化溜まり表現はしない</li>
+        <li>所有: すべてのタスク/ログ操作は <code>session.user.id === tasks.user_id</code> に限定</li>
+      </ul>
+
+      <h2>外部仕様</h2>
+
+      <h3>F-00 Google ログイン / ログアウト</h3>
+      <ul>
+        <li>目的: 個人データをクラウドに紐づけ、機種変更後も継続利用できるようにする</li>
+        <li>対応画面: S-00 ログイン</li>
+        <li>権限: 未認証はログイン可。認証済は <code>/home</code> へ</li>
+      </ul>
+      <p>入力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">制約・備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>OAuth 同意</td><td>—</td><td>必須</td><td>Google アカウント。スコープ email / profile / openid</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>出力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>セッション Cookie</td><td>Cookie</td><td>Better Auth が発行</td></tr>
+            <tr><td>遷移先</td><td>URL</td><td>成功時 <code>/home</code>（callbackUrl があれば優先）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>受け入れ基準</p>
+      <ul>
+        <li>Given 未ログイン When <code>/home</code> にアクセス Then <code>/login</code> へリダイレクトされる</li>
+        <li>Given ログイン成功 When 完了 Then 自分のタスク一覧が見える（他ユーザーのデータは見えない）</li>
+        <li>Given ログイン中 When ログアウト Then セッションが破棄されログイン画面に戻る</li>
+      </ul>
+
+      <h3>F-01 タスク一覧</h3>
+      <ul>
+        <li>目的: 掃除タスクの状況を一覧で把握し、1タップ記録の入口にする</li>
+        <li>対応画面: S-01 ホーム</li>
+        <li>権限: 認証済ユーザー（自分のタスクのみ）</li>
+      </ul>
+      <p>入力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">制約・備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>基準日 today</td><td>日付</td><td>必須</td><td>サーバー側当日（表示・ratio 計算用）</td></tr>
+            <tr><td>userId</td><td>文字列</td><td>必須</td><td>セッションから取得</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>出力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>タスクカード一覧</td><td>配列</td><td>ratio 降順ソート済み</td></tr>
+            <tr><td>タスク名</td><td>文字列</td><td>1行省略</td></tr>
+            <tr><td>経過日数メタ</td><td>文字列</td><td>「前回から N 日・目安 M 日」または「まだ記録なし・目安 M 日」</td></tr>
+            <tr><td>状態背景</td><td>late / warn / normal</td><td>ratio に応じた淡色</td></tr>
+            <tr><td>当日記録済み表示</td><td>真偽</td><td>ボタンが「記録済み」スタイル</td></tr>
+            <tr><td>空状態</td><td>メッセージ</td><td>タスク0件時（シード後は通常4件）</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>受け入れ基準</p>
+      <ul>
+        <li>Given 自分のタスクが複数ある When ホームを開く Then ratio が大きい順に並ぶ</li>
+        <li>Given ratio ≥ 1.5 のタスク When 表示 Then late-bg 背景で警告アイコンは出ない</li>
+        <li>Given 他ユーザーのタスク When 一覧取得 Then 含まれない</li>
+      </ul>
+
+      <h3>F-02 1タップ記録（今日）</h3>
+      <ul>
+        <li>目的: 確認ダイアログなしで当日の実施を1タップ記録する</li>
+        <li>対応画面: S-01</li>
+        <li>権限: 認証済・タスク所有者</li>
+      </ul>
+      <p>入力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">制約・備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>taskId</td><td>文字列</td><td>必須</td><td>自分のタスク</td></tr>
+            <tr><td>date</td><td>日付</td><td>省略時は今日</td><td>未来不可</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>出力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>記録日</td><td>string</td><td>成功時 <code>{ ok: true, data: { date } }</code></td></tr>
+            <tr><td>トースト</td><td>メッセージ + アンドゥ</td><td>3.8 秒で自動消滅</td></tr>
+            <tr><td>フィードバック</td><td>アニメ</td><td>pop / flash / FLIP 480ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>受け入れ基準</p>
+      <ul>
+        <li>Given 当日未記録 When 「今日やった」をタップ Then task_logs に今日が入り、カードが再ソートで下方向へ移動しうる</li>
+        <li>Given 当日記録済み When 再度タップ Then 追加されず「その日はすでに記録済みです」</li>
+        <li>Given 記録成功 When 完了 Then 確認ダイアログは出ず、アンドゥ付きトーストが出る</li>
+      </ul>
+
+      <h3>F-03 過去日記録</h3>
+      <ul>
+        <li>目的: 思い出した過去の実施日を記録する</li>
+        <li>対応画面: S-04 記録シート（S-01 長押し 480ms / S-03 から起動）</li>
+        <li>権限: 認証済・タスク所有者</li>
+      </ul>
+      <p>入力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">制約・備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>taskId</td><td>文字列</td><td>必須</td><td>対象タスク</td></tr>
+            <tr><td>date</td><td>日付</td><td>必須</td><td>今日以前。未来不可。date input の max=今日</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>出力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>成功</td><td>ActionResult</td><td>logs に選択日が追加</td></tr>
+            <tr><td>トースト</td><td>メッセージ + アンドゥ</td><td>記録成功時</td></tr>
+            <tr><td>エラー</td><td>文字列</td><td>同日重複・未来日・未所有</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>受け入れ基準</p>
+      <ul>
+        <li>Given ホーム When 「今日やった」を 480ms 長押し Then 記録シートが開き、発火後の click は無視される</li>
+        <li>Given 記録シート When 「昨日」をタップ Then 昨日が logs に入りシートが閉じる</li>
+        <li>Given 未来日 When 記録しようとする Then 「未来の日付は記録できません」</li>
+      </ul>
+
+      <h3>F-04 記録アンドゥ</h3>
+      <ul>
+        <li>目的: 誤記録を気軽に取り消せるようにする</li>
+        <li>対応画面: 共通トースト</li>
+        <li>権限: 認証済・タスク所有者</li>
+      </ul>
+      <p>入力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">制約・備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>taskId</td><td>文字列</td><td>必須</td><td>直前に記録したタスク</td></tr>
+            <tr><td>date</td><td>日付</td><td>必須</td><td>直前に記録した日</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>受け入れ基準</p>
+      <ul>
+        <li>Given 記録直後のトースト表示中 When 「元に戻す」をタップ Then 直前の記録1件のみ削除され一覧が更新される</li>
+        <li>Given トーストが 3.8 秒で消えた後 When 操作しない Then アンドゥ導線は消える</li>
+      </ul>
+
+      <h3>F-05 タスク登録</h3>
+      <ul>
+        <li>目的: 気になる掃除を名前と目安周期で登録する</li>
+        <li>対応画面: S-02（新規）</li>
+        <li>権限: 認証済</li>
+      </ul>
+      <p>入力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">制約・備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>name</td><td>文字列</td><td>必須</td><td>trim 後空不可。placeholder「例：シーツ洗い」</td></tr>
+            <tr><td>cycleDays</td><td>整数</td><td>必須</td><td>1–365 に clamp。プリセット 7/14/30 または数値入力</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>受け入れ基準</p>
+      <ul>
+        <li>Given 名前が空 When 保存 Then 登録されない（エラーまたは disabled）</li>
+        <li>Given 名前「シーツ洗い」周期7 When 保存 Then ホームに追加され ratio=1.0 で見える</li>
+      </ul>
+
+      <h3>F-06 タスク編集・削除</h3>
+      <ul>
+        <li>目的: 名前・周期を後から変え、不要タスクを履歴ごと消す</li>
+        <li>対応画面: S-02（編集）</li>
+        <li>権限: 認証済・タスク所有者（他ユーザーの id では「タスクが見つかりません」）</li>
+      </ul>
+      <p>入力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">制約・備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>id / taskId</td><td>文字列</td><td>必須</td><td>編集対象</td></tr>
+            <tr><td>name</td><td>文字列</td><td>必須</td><td>trim 後空不可</td></tr>
+            <tr><td>cycleDays</td><td>整数</td><td>必須</td><td>1–365 に clamp</td></tr>
+            <tr><td>削除確認</td><td>二段 UI</td><td>削除時</td><td>confirm() は使わない。インライン確認</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>受け入れ基準</p>
+      <ul>
+        <li>Given 編集画面 When 周期を変更して保存 Then ホームの目安表示が更新される（logs は残る）</li>
+        <li>Given 削除確定 When 実行 Then タスクと task_logs がカスケード削除されホームに戻る</li>
+      </ul>
+
+      <h3>F-07 履歴画面</h3>
+      <ul>
+        <li>目的: サマリーと実施日リストを確認し、日付選択記録へ進む</li>
+        <li>対応画面: S-03</li>
+        <li>権限: 認証済・タスク所有者</li>
+      </ul>
+      <p>出力項目</p>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">項目名</th><th scope="col">型</th><th scope="col">備考</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>目安の周期</td><td>文字列</td><td>「N日ごと」</td></tr>
+            <tr><td>前回</td><td>文字列</td><td>「N日前」等</td></tr>
+            <tr><td>次の目安</td><td>文字列</td><td>「M月D日ごろ」</td></tr>
+            <tr><td>実施日リスト</td><td>配列</td><td>新しい順。空なら空状態文言</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>受け入れ基準</p>
+      <ul>
+        <li>Given 記録があるタスク When 履歴を開く Then サマリー3項目と日付行が表示される</li>
+        <li>Given 記録なし When 履歴を開く Then 「まだ記録がありません」</li>
+        <li>Given 履歴 When 「日付を選んで記録」 Then 記録シートが開く</li>
+      </ul>
+
+      <h3>F-08 クラウド永続化</h3>
+      <ul>
+        <li>目的: リロード・再ログイン・機種変更後もタスク・記録を保持する</li>
+        <li>対応画面: 全アプリ画面</li>
+        <li>権限: 認証済（user_id スコープ）</li>
+      </ul>
+      <p>受け入れ基準</p>
+      <ul>
+        <li>Given タスク登録・記録後 When ページをリロード Then 同じデータが Turso から復元される</li>
+        <li>Given 初回ログインでタスク0件 When ホーム表示 Then サンプルタスクが投入されうる（seedIfEmpty）</li>
+        <li>Given 別ユーザーでログイン When 一覧表示 Then 先のユーザーのデータは見えない</li>
+      </ul>
+    </div>
+    <nav class="page-nav">
+      <a class="page-nav-item" href="02_用語集.html"><span class="page-nav-dir">← 前</span><span class="page-nav-title">用語集</span><span class="page-nav-phase">02 基本設計</span></a>
+      <a class="page-nav-item page-nav-next" href="04_画面設計.html"><span class="page-nav-dir">次 →</span><span class="page-nav-title">画面設計</span><span class="page-nav-phase">02 基本設計</span></a>
+    </nav>
+    <div class="foot">おうち掃除ログ 設計書 · <a href="../index.html">インデックス</a></div>
+  </main>
+</div>
+<dialog class="zoom-dlg" id="zoomDlg">
+  <div class="zoom-bar">
+    <span class="title">図解</span>
+    <button type="button" data-z="out" title="縮小">−</button>
+    <button type="button" data-z="in" title="拡大">＋</button>
+    <button type="button" data-z="reset" title="全体表示">リセット</button>
+    <button type="button" data-z="close" title="閉じる">閉じる ✕</button>
+  </div>
+  <div class="zoom-stage" id="zoomStage"></div>
+</dialog>
+<script src="../assets/nav.js" defer></script>
+<script src="../assets/enhance.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API設計 ｜ おうち掃除ログ 設計書</title>
+<meta name="description" content="おうち掃除ログの Better Auth ルートと Server Actions 契約を定義する。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+</head>
+<body>
+<div class="wrap">
+  <aside id="sidePanel">
+    <div class="side-header">
+      <button type="button" class="side-toggle" id="sideToggle" aria-controls="sidePanel" aria-expanded="true" aria-label="メニューを閉じる" title="メニューを閉じる"><span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+      <div class="side-header-text">
+        <div class="brand"><a href="../index.html">設計書</a><small>おうち掃除ログ / sorosoro</small></div>
+        <div class="side-title"><a href="../index.html">おうち掃除ログ</a></div>
+      </div>
+    </div>
+    <nav class="side-nav" aria-label="ドキュメント一覧">
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#01_要件定義">01 要件定義</a></span>
+        <ol>
+          <li><a href="../01_要件定義/01_プロジェクト概要.html"><span class="n">01</span>プロジェクト概要</a></li>
+          <li><a href="../01_要件定義/02_ペルソナ・ユーザーストーリー.html"><span class="n">02</span>ペルソナ・ユーザーストーリー</a></li>
+          <li><a href="../01_要件定義/03_機能要件.html"><span class="n">03</span>機能要件</a></li>
+          <li><a href="../01_要件定義/04_非機能要件.html"><span class="n">04</span>非機能要件</a></li>
+        </ol>
+      </div>
+      <div class="phase is-current">
+        <span class="phase-label"><a href="../index.html#02_基本設計">02 基本設計</a></span>
+        <ol>
+          <li><a href="../02_基本設計/01_システム構成.html"><span class="n">01</span>システム構成</a></li>
+          <li><a href="../02_基本設計/02_用語集.html"><span class="n">02</span>用語集</a></li>
+          <li><a href="../02_基本設計/03_機能設計.html"><span class="n">03</span>機能設計</a></li>
+          <li><a href="../02_基本設計/04_画面設計.html"><span class="n">04</span>画面設計</a></li>
+          <li><a href="../02_基本設計/05_DB設計.html"><span class="n">05</span>DB設計(論理)</a></li>
+          <li><a class="active" href="../02_基本設計/06_API設計.html"><span class="n">06</span>API設計</a></li>
+          <li><a href="../02_基本設計/07_認可設計.html"><span class="n">07</span>認可設計</a></li>
+          <li><a href="../02_基本設計/adr/0000_ADRテンプレート.html"><span class="n">A0</span>ADR テンプレート</a></li>
+          <li><a href="../02_基本設計/adr/0001_技術スタック(テンプレート既定).html"><span class="n">A1</span>ADR-0001（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0002_ローカルファースト技術スタック.html"><span class="n">A2</span>ADR-0002（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0003_menva同型スタック(Vercel+Turso+BetterAuth).html"><span class="n">A3</span>ADR-0003 技術スタック</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#03_詳細設計">03 詳細設計</a></span>
+        <ol>
+          <li><a href="../03_詳細設計/01_処理設計.html"><span class="n">01</span>処理設計</a></li>
+          <li><a href="../03_詳細設計/02_テーブル定義.html"><span class="n">02</span>テーブル定義</a></li>
+          <li><a href="../03_詳細設計/03_単体テスト観点.html"><span class="n">03</span>単体テスト観点</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#04_テスト">04 テスト</a></span>
+        <ol>
+          <li><a href="../04_テスト/01_テスト計画.html"><span class="n">01</span>テスト計画</a></li>
+          <li><a href="../04_テスト/02_結合テストケース.html"><span class="n">02</span>結合テストケース</a></li>
+          <li><a href="../04_テスト/03_総合テストケース.html"><span class="n">03</span>総合テストケース</a></li>
+          <li><a href="../04_テスト/04_受け入れテストシナリオ.html"><span class="n">04</span>受け入れテストシナリオ</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#05_リリース">05 リリース</a></span>
+        <ol>
+          <li><a href="../05_リリース/01_リリース計画.html"><span class="n">01</span>リリース計画</a></li>
+          <li><a href="../05_リリース/02_リリースノート.html"><span class="n">02</span>リリースノート</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#06_運用">06 運用</a></span>
+        <ol>
+          <li><a href="../06_運用/01_監視・障害対応.html"><span class="n">01</span>監視・障害対応</a></li>
+          <li><a href="../06_運用/02_バックアップ・メンテナンス.html"><span class="n">02</span>バックアップ・メンテナンス</a></li>
+        </ol>
+      </div>
+    </nav>
+    <div class="side-meta">おうち掃除ログ / sorosoro<br>正本: PRODUCT_BRIEF · ADR-0003</div>
+  </aside>
+  <main>
+    <div class="hero">
+      <div class="kicker">02 基本設計 · 06/07</div>
+      <h1>API設計書</h1>
+      <p class="lede">おうち掃除ログのアプリケーション API。認証は Better Auth の HTTP ルート、ドメイン操作は Server Actions。</p>
+    </div>
+    <div class="prose">
+      <div class="callout">
+        <p class="callout-title">確定メモ</p>
+        <p>実装の正は <code>src/app/api/auth/[...all]/route.ts</code> と <code>src/actions/tasks.ts</code>。公開 REST リソース API は MVP では設けない。</p>
+      </div>
+
+      <h2>共通規約</h2>
+      <ul>
+        <li><strong>認証</strong> — Server Actions は <code>requireUserId()</code> でセッション必須。未認証は <code>UNAUTHORIZED</code> → クライアント向けメッセージ「ログインが必要です」。</li>
+        <li><strong>所有</strong> — 更新・削除・記録は <code>tasks.user_id = session.user.id</code> でスコープ。未所有は「タスクが見つかりません」。</li>
+        <li><strong>結果型</strong> — <code>ActionResult&lt;T&gt; = { ok: true; data: T } | { ok: false; error: string }</code></li>
+        <li><strong>日付</strong> — <code>YYYY-MM-DD</code>。未来日の記録はエラー。</li>
+        <li><strong>再検証</strong> — ミューテーション後 <code>revalidatePath("/")</code></li>
+        <li><strong>ソート・ratio</strong> — 読み取り時に <code>deriveTask</code> / <code>sortTasks</code> で計算。DB に保存しない。</li>
+      </ul>
+
+      <h2>Better Auth ルート</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">パス</th>
+              <th scope="col">概要</th>
+              <th scope="col">備考</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>/api/auth/*</code></td><td>Better Auth ハンドラ全体</td><td>sign-in / sign-out / session / OAuth callback 等</td></tr>
+            <tr><td><code>/api/auth/callback/google</code></td><td>Google OAuth コールバック</td><td>GCP に登録するリダイレクト URI</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>プロバイダ: Google（<code>GOOGLE_CLIENT_ID</code> / <code>GOOGLE_CLIENT_SECRET</code>）。セッション Cookie 名: <code>better-auth.session_token</code>（Secure 環境では <code>__Secure-</code> 接頭）。</p>
+
+      <h2>Server Actions 一覧</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">関数</th>
+              <th scope="col">概要</th>
+              <th scope="col">認証</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>listTasksAction()</code></td><td>派生値付きタスクを ratio 降順で返す</td><td>要</td></tr>
+            <tr><td><code>createTaskAction({ name, cycleDays })</code></td><td>タスク新規作成</td><td>要</td></tr>
+            <tr><td><code>updateTaskAction({ id, name, cycleDays })</code></td><td>名前・周期の更新</td><td>要</td></tr>
+            <tr><td><code>deleteTaskAction(id)</code></td><td>タスク削除（logs cascade）</td><td>要</td></tr>
+            <tr><td><code>recordDoneAction({ taskId, date? })</code></td><td>実施日を追加（省略時は今日）</td><td>要</td></tr>
+            <tr><td><code>undoRecordAction({ taskId, date })</code></td><td>実施日を1件削除</td><td>要</td></tr>
+            <tr><td><code>seedIfEmptyAction()</code></td><td>タスク0件時のみサンプル投入</td><td>要</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>個別仕様</h2>
+
+      <h3>listTasksAction(): ActionResult&lt;{ tasks: DerivedTask[]; today: string }&gt;</h3>
+      <ul>
+        <li>概要: ログインユーザーのタスクを取得し、ratio・状態を付与してソート</li>
+        <li>入力: なし（userId はセッション）</li>
+        <li>成功: <code>{ ok: true, data: { tasks, today } }</code></li>
+        <li>失敗: 未認証「ログインが必要です」/ その他「タスクの取得に失敗しました」</li>
+      </ul>
+
+      <h3>createTaskAction({ name, cycleDays })</h3>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">名前</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">説明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>name</td><td>string</td><td>必須</td><td>trim 後空不可 → 「タスク名を入力してください」</td></tr>
+            <tr><td>cycleDays</td><td>number</td><td>必須</td><td>1–365 に clamp</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li>成功: <code>{ ok: true, data: { id } }</code></li>
+        <li>失敗: 未認証 / バリデーション / 「タスクの作成に失敗しました」</li>
+      </ul>
+
+      <h3>updateTaskAction({ id, name, cycleDays })</h3>
+      <ul>
+        <li>概要: 所有タスクの name / cycleDays のみ更新</li>
+        <li>成功: <code>{ ok: true }</code></li>
+        <li>失敗: 未認証 / 名前空 / 未所有「タスクが見つかりません」 / 更新失敗</li>
+      </ul>
+
+      <h3>deleteTaskAction(id)</h3>
+      <ul>
+        <li>概要: 所有タスクを削除（task_logs は FK cascade）</li>
+        <li>成功: <code>{ ok: true }</code></li>
+        <li>失敗: 未認証 / 未所有「タスクが見つかりません」</li>
+      </ul>
+
+      <h3>recordDoneAction({ taskId, date? })</h3>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">名前</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">説明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>taskId</td><td>string</td><td>必須</td><td>対象</td></tr>
+            <tr><td>date</td><td>string</td><td>任意</td><td>YYYY-MM-DD。省略時は today</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li>成功: <code>{ ok: true, data: { date } }</code></li>
+        <li>失敗（error 文字列）:
+          <ul>
+            <li>未認証 → 「ログインが必要です」</li>
+            <li>形式不正 → 「日付の形式が不正です」</li>
+            <li>未来日 → 「未来の日付は記録できません」</li>
+            <li>未所有 → 「タスクが見つかりません」</li>
+            <li>同日重複 → 「その日はすでに記録済みです」</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>undoRecordAction({ taskId, date })</h3>
+      <ul>
+        <li>概要: 指定日の記録を1件削除（アンドゥ）</li>
+        <li>成功: <code>{ ok: true }</code>（該当行がなくても ok になりうる）</li>
+        <li>失敗: 未認証 / 未所有「タスクが見つかりません」 / 「取り消しに失敗しました」</li>
+      </ul>
+
+      <h3>seedIfEmptyAction()</h3>
+      <ul>
+        <li>概要: 当該ユーザーにタスクが0件のときだけサンプル4件＋過去ログを投入</li>
+        <li>成功: <code>{ ok: true, data: { seeded: boolean } }</code></li>
+        <li>既にタスクがある場合: <code>seeded: false</code></li>
+      </ul>
+
+      <h2>エラー対応表（要約）</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">条件</th>
+              <th scope="col">error メッセージ例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>セッションなし（UNAUTHORIZED）</td><td>ログインが必要です</td></tr>
+            <tr><td>同日の二重記録</td><td>その日はすでに記録済みです</td></tr>
+            <tr><td>未来日</td><td>未来の日付は記録できません</td></tr>
+            <tr><td>他ユーザーのタスク / 不存在</td><td>タスクが見つかりません</td></tr>
+            <tr><td>名前空</td><td>タスク名を入力してください</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <nav class="page-nav">
+      <a class="page-nav-item" href="05_DB設計.html"><span class="page-nav-dir">← 前</span><span class="page-nav-title">DB設計(論理)</span><span class="page-nav-phase">02 基本設計</span></a>
+      <a class="page-nav-item page-nav-next" href="07_認可設計.html"><span class="page-nav-dir">次 →</span><span class="page-nav-title">認可設計</span><span class="page-nav-phase">02 基本設計</span></a>
+    </nav>
+    <div class="foot">おうち掃除ログ 設計書 · <a href="../index.html">インデックス</a></div>
+  </main>
+</div>
+<dialog class="zoom-dlg" id="zoomDlg">
+  <div class="zoom-bar">
+    <span class="title">図解</span>
+    <button type="button" data-z="out" title="縮小">−</button>
+    <button type="button" data-z="in" title="拡大">＋</button>
+    <button type="button" data-z="reset" title="全体表示">リセット</button>
+    <button type="button" data-z="close" title="閉じる">閉じる ✕</button>
+  </div>
+  <div class="zoom-stage" id="zoomStage"></div>
+</dialog>
+<script src="../assets/nav.js" defer></script>
+<script src="../assets/enhance.js" defer></script>
+</body>
+</html>

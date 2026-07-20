@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>単体テスト観点 ｜ {{PROJECT_NAME}} 設計書</title>
+<meta name="description" content="機能ごとの単体テスト観点を正常系・異常系・境界値で整理する。単体テストは詳細設計に対応。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+</head>
+<body>
+<div class="wrap">
+<aside id="sidePanel">
+  <div class="side-header">
+    <button type="button" class="side-toggle" id="sideToggle" aria-controls="sidePanel" aria-expanded="true" aria-label="メニューを閉じる" title="メニューを閉じる"><span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+    <div class="side-header-text">
+      <div class="brand"><a href="../index.html">設計書雛形</a><small>{{PROJECT_NAME}} / ap-template-v4</small></div>
+      <div class="side-title"><a href="../index.html">{{PROJECT_NAME}}</a></div>
+    </div>
+  </div>
+  <nav class="side-nav" aria-label="ドキュメント一覧">
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#01_要件定義">01 要件定義</a></span>
+      <ol>
+        <li><a href="../01_要件定義/01_プロジェクト概要.html"><span class="n">01</span>プロジェクト概要</a></li>
+        <li><a href="../01_要件定義/02_ペルソナ・ユーザーストーリー.html"><span class="n">02</span>ペルソナ・ユーザーストーリー</a></li>
+        <li><a href="../01_要件定義/03_機能要件.html"><span class="n">03</span>機能要件</a></li>
+        <li><a href="../01_要件定義/04_非機能要件.html"><span class="n">04</span>非機能要件</a></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#02_基本設計">02 基本設計</a></span>
+      <ol>
+        <li><a href="../02_基本設計/01_システム構成.html"><span class="n">01</span>システム構成</a></li>
+        <li><a href="../02_基本設計/02_用語集.html"><span class="n">02</span>用語集</a></li>
+        <li><a href="../02_基本設計/03_機能設計.html"><span class="n">03</span>機能設計</a></li>
+        <li><a href="../02_基本設計/04_画面設計.html"><span class="n">04</span>画面設計</a></li>
+        <li><a href="../02_基本設計/05_DB設計.html"><span class="n">05</span>DB設計(論理)</a></li>
+        <li><a href="../02_基本設計/06_API設計.html"><span class="n">06</span>API設計</a></li>
+        <li><a href="../02_基本設計/07_認可設計.html"><span class="n">07</span>認可設計</a></li>
+        <li><a href="../02_基本設計/adr/0000_ADRテンプレート.html"><span class="n">A0</span>ADR テンプレート</a></li>
+        <li><a href="../02_基本設計/adr/0001_技術スタック(テンプレート既定).html"><span class="n">A1</span>ADR 技術スタック</a></li>
+      </ol>
+    </div>
+    <div class="phase is-current">
+      <span class="phase-label"><a href="../index.html#03_詳細設計">03 詳細設計</a></span>
+      <ol>
+        <li><a href="../03_詳細設計/01_処理設計.html"><span class="n">01</span>処理設計</a></li>
+        <li><a href="../03_詳細設計/02_テーブル定義.html"><span class="n">02</span>テーブル定義</a></li>
+        <li><a href="../03_詳細設計/03_単体テスト観点.html" class="active"><span class="n">03</span>単体テスト観点</a></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#04_テスト">04 テスト</a></span>
+      <ol>
+        <li><a href="../04_テスト/01_テスト計画.html"><span class="n">01</span>テスト計画</a></li>
+        <li><a href="../04_テスト/02_結合テストケース.html"><span class="n">02</span>結合テストケース</a></li>
+        <li><a href="../04_テスト/03_総合テストケース.html"><span class="n">03</span>総合テストケース</a></li>
+        <li><a href="../04_テスト/04_受け入れテストシナリオ.html"><span class="n">04</span>受け入れテストシナリオ</a></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#05_リリース">05 リリース</a></span>
+      <ol>
+        <li><a href="../05_リリース/01_リリース計画.html"><span class="n">01</span>リリース計画</a></li>
+        <li><a href="../05_リリース/02_リリースノート.html"><span class="n">02</span>リリースノート</a></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <span class="phase-label"><a href="../index.html#06_運用">06 運用</a></span>
+      <ol>
+        <li><a href="../06_運用/01_監視・障害対応.html"><span class="n">01</span>監視・障害対応</a></li>
+        <li><a href="../06_運用/02_バックアップ・メンテナンス.html"><span class="n">02</span>バックアップ・メンテナンス</a></li>
+      </ol>
+    </div>
+  </nav>
+  <div class="side-meta">全 24 文書 + インデックス<br>正本: Markdown(docs-template/)</div>
+</aside>
+  <main>
+    <div class="hero">
+      <div class="kicker">03 詳細設計 · 03/03</div>
+      <h1>単体テスト観点</h1>
+      <p class="lede">機能ごとの単体テスト観点を正常系・異常系・境界値で整理する。単体テストは詳細設計に対応(V字)。</p>
+    </div>
+    <div class="prose">
+      <div class="callout">
+        <p class="callout-title">記入ガイド</p>
+        <p>{{ }} を自アプリの値に置換。(例)行は削除。観点は機能ごとに行を増やす。</p>
+        <p>本表は AI に単体テストコードを生成させる際のインプット。観点を漏れなく列挙する。</p>
+        <p>実装は詳細設計の正であるコード・テストと本表を突き合わせて網羅を確認する。</p>
+        <p>観点表: 機能列は自アプリの機能名に置換。1機能で行が足りなければ増やす。</p>
+        <p>網羅の目安: 機能ごとに、少なくとも下の区分を1件以上満たすこと。</p>
+      </div>
+
+      <h2>観点整理の方針</h2>
+      <ul>
+        <li>各機能の処理・分岐・バリデーションを、正常系・異常系・境界値の3区分で洗い出す。</li>
+        <li>観点は「入力条件 → 期待結果」の形で検証可能に書く。受け入れ基準と対応させる。</li>
+        <li>テストは <code>app/tests/features/&lt;機能&gt;/</code> に配置。参考は example 機能のテスト(<code>test_service.py</code> / <code>test_router.py</code>)。</li>
+      </ul>
+
+      <h2>観点表</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">ID</th><th scope="col">機能</th><th scope="col">区分</th><th scope="col">観点(入力条件 → 期待結果)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>(例) UT-01</td><td>アイテム一覧取得</td><td>正常系</td><td>データ複数件 → 全件をページネーションで返す</td></tr>
+            <tr><td>(例) UT-02</td><td>アイテム一覧取得</td><td>正常系</td><td>論理削除済みを含む → 削除済みは除外される</td></tr>
+            <tr><td>(例) UT-03</td><td>アイテム一覧取得</td><td>境界値</td><td>per_page 境界(1件/最終ページ) → 件数が正しい</td></tr>
+            <tr><td>(例) UT-04</td><td>アイテム作成</td><td>正常系</td><td>必須項目を満たす → 201 と作成結果を返す</td></tr>
+            <tr><td>(例) UT-05</td><td>アイテム作成</td><td>異常系</td><td>name 空 → 422 バリデーションエラー</td></tr>
+            <tr><td>(例) UT-06</td><td>アイテム更新</td><td>異常系</td><td>存在しないID → None / 404</td></tr>
+            <tr><td>(例) UT-07</td><td>アイテム削除</td><td>正常系</td><td>存在するID → 論理削除され deleted=True</td></tr>
+            <tr><td>(例) UT-08</td><td>アイテム削除</td><td>異常系</td><td>存在しないID → False / 404</td></tr>
+            <tr><td>UT-01</td><td>{{機能名}}</td><td>正常系</td><td>{{入力条件}} → {{期待結果}}</td></tr>
+            <tr><td>UT-02</td><td>{{機能名}}</td><td>異常系</td><td>{{入力条件}} → {{期待結果}}</td></tr>
+            <tr><td>UT-03</td><td>{{機能名}}</td><td>境界値</td><td>{{入力条件}} → {{期待結果}}</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>網羅の目安</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">区分</th><th scope="col">最低限カバーする内容</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>正常系</td><td>主要ユースケースの成功経路</td></tr>
+            <tr><td>異常系</td><td>バリデーション違反・権限不足・対象不存在</td></tr>
+            <tr><td>境界値</td><td>桁数・件数・日付・数量の上下限とゼロ・空</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <nav class="page-nav">
+      <a class="page-nav-item" href="02_テーブル定義.html"><span class="page-nav-dir">← 前</span><span class="page-nav-title">テーブル定義</span><span class="page-nav-phase">03 詳細設計</span></a>
+      <a class="page-nav-item page-nav-next" href="../04_テスト/01_テスト計画.html"><span class="page-nav-dir">次 →</span><span class="page-nav-title">テスト計画</span><span class="page-nav-phase">04 テスト</span></a>
+    </nav>
+    <div class="foot">{{PROJECT_NAME}} 設計書雛形 · 正本は Markdown(docs-template/) · <a href="../index.html">インデックス</a></div>
+  </main>
+</div>
+<dialog class="zoom-dlg" id="zoomDlg">
+  <div class="zoom-bar">
+    <span class="title">図解</span>
+    <button type="button" data-z="out" title="縮小">−</button>
+    <button type="button" data-z="in" title="拡大">＋</button>
+    <button type="button" data-z="reset" title="全体表示">リセット</button>
+    <button type="button" data-z="close" title="閉じる">閉じる ✕</button>
+  </div>
+  <div class="zoom-stage" id="zoomStage"></div>
+</dialog>
+<script src="../assets/nav.js" defer></script>
+<script src="../assets/enhance.js" defer></script>
+</body>
+</html>

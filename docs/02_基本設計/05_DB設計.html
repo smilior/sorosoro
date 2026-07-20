@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DB設計 ｜ おうち掃除ログ 設計書</title>
+<meta name="description" content="おうち掃除ログの論理 ER と Turso 物理テーブル定義を定義する。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+</head>
+<body>
+<div class="wrap">
+  <aside id="sidePanel">
+    <div class="side-header">
+      <button type="button" class="side-toggle" id="sideToggle" aria-controls="sidePanel" aria-expanded="true" aria-label="メニューを閉じる" title="メニューを閉じる"><span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+      <div class="side-header-text">
+        <div class="brand"><a href="../index.html">設計書</a><small>おうち掃除ログ / sorosoro</small></div>
+        <div class="side-title"><a href="../index.html">おうち掃除ログ</a></div>
+      </div>
+    </div>
+    <nav class="side-nav" aria-label="ドキュメント一覧">
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#01_要件定義">01 要件定義</a></span>
+        <ol>
+          <li><a href="../01_要件定義/01_プロジェクト概要.html"><span class="n">01</span>プロジェクト概要</a></li>
+          <li><a href="../01_要件定義/02_ペルソナ・ユーザーストーリー.html"><span class="n">02</span>ペルソナ・ユーザーストーリー</a></li>
+          <li><a href="../01_要件定義/03_機能要件.html"><span class="n">03</span>機能要件</a></li>
+          <li><a href="../01_要件定義/04_非機能要件.html"><span class="n">04</span>非機能要件</a></li>
+        </ol>
+      </div>
+      <div class="phase is-current">
+        <span class="phase-label"><a href="../index.html#02_基本設計">02 基本設計</a></span>
+        <ol>
+          <li><a href="../02_基本設計/01_システム構成.html"><span class="n">01</span>システム構成</a></li>
+          <li><a href="../02_基本設計/02_用語集.html"><span class="n">02</span>用語集</a></li>
+          <li><a href="../02_基本設計/03_機能設計.html"><span class="n">03</span>機能設計</a></li>
+          <li><a href="../02_基本設計/04_画面設計.html"><span class="n">04</span>画面設計</a></li>
+          <li><a class="active" href="../02_基本設計/05_DB設計.html"><span class="n">05</span>DB設計(論理)</a></li>
+          <li><a href="../02_基本設計/06_API設計.html"><span class="n">06</span>API設計</a></li>
+          <li><a href="../02_基本設計/07_認可設計.html"><span class="n">07</span>認可設計</a></li>
+          <li><a href="../02_基本設計/adr/0000_ADRテンプレート.html"><span class="n">A0</span>ADR テンプレート</a></li>
+          <li><a href="../02_基本設計/adr/0001_技術スタック(テンプレート既定).html"><span class="n">A1</span>ADR-0001（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0002_ローカルファースト技術スタック.html"><span class="n">A2</span>ADR-0002（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0003_menva同型スタック(Vercel+Turso+BetterAuth).html"><span class="n">A3</span>ADR-0003 技術スタック</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#03_詳細設計">03 詳細設計</a></span>
+        <ol>
+          <li><a href="../03_詳細設計/01_処理設計.html"><span class="n">01</span>処理設計</a></li>
+          <li><a href="../03_詳細設計/02_テーブル定義.html"><span class="n">02</span>テーブル定義</a></li>
+          <li><a href="../03_詳細設計/03_単体テスト観点.html"><span class="n">03</span>単体テスト観点</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#04_テスト">04 テスト</a></span>
+        <ol>
+          <li><a href="../04_テスト/01_テスト計画.html"><span class="n">01</span>テスト計画</a></li>
+          <li><a href="../04_テスト/02_結合テストケース.html"><span class="n">02</span>結合テストケース</a></li>
+          <li><a href="../04_テスト/03_総合テストケース.html"><span class="n">03</span>総合テストケース</a></li>
+          <li><a href="../04_テスト/04_受け入れテストシナリオ.html"><span class="n">04</span>受け入れテストシナリオ</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#05_リリース">05 リリース</a></span>
+        <ol>
+          <li><a href="../05_リリース/01_リリース計画.html"><span class="n">01</span>リリース計画</a></li>
+          <li><a href="../05_リリース/02_リリースノート.html"><span class="n">02</span>リリースノート</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#06_運用">06 運用</a></span>
+        <ol>
+          <li><a href="../06_運用/01_監視・障害対応.html"><span class="n">01</span>監視・障害対応</a></li>
+          <li><a href="../06_運用/02_バックアップ・メンテナンス.html"><span class="n">02</span>バックアップ・メンテナンス</a></li>
+        </ol>
+      </div>
+    </nav>
+    <div class="side-meta">おうち掃除ログ / sorosoro<br>正本: PRODUCT_BRIEF · ADR-0003</div>
+  </aside>
+  <main>
+    <div class="hero">
+      <div class="kicker">02 基本設計 · 05/07</div>
+      <h1>データベース論理設計書</h1>
+      <p class="lede">おうち掃除ログのエンティティと Turso 物理テーブルを定義する。正本は <code>src/lib/db/schema.ts</code>。</p>
+    </div>
+    <div class="prose">
+      <div class="callout">
+        <p class="callout-title">確定メモ</p>
+        <p>DB は Turso（libSQL）+ Drizzle ORM。ローカルは <code>turso dev --db-file local.db</code>。スキーマ適用は <code>npm run db:push</code>。派生値は<strong>永続化しない</strong>。</p>
+      </div>
+
+      <h2>永続化方針</h2>
+      <ul>
+        <li>エンジン: Turso / libSQL（SQLite 互換）</li>
+        <li>アクセス: Drizzle ORM（<code>@libsql/client</code>）</li>
+        <li>所有境界: <code>tasks.user_id</code> → <code>users.id</code></li>
+        <li>削除: ユーザー削除時 cascade。タスク削除時 task_logs cascade</li>
+        <li>派生値（lastDone / elapsedDays / ratio / nextDue / state）はドメイン層で毎回計算</li>
+      </ul>
+
+      <h2>命名規則</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">区分</th>
+              <th scope="col">規約</th>
+              <th scope="col">例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>テーブル</td><td>snake_case 複数形</td><td><code>tasks</code>, <code>task_logs</code>, <code>users</code></td></tr>
+            <tr><td>カラム</td><td>snake_case</td><td><code>cycle_days</code>, <code>done_date</code>, <code>user_id</code></td></tr>
+            <tr><td>TS プロパティ</td><td>camelCase（Drizzle）</td><td><code>cycleDays</code>, <code>doneDate</code></td></tr>
+            <tr><td>日付（実施）</td><td>text ISO</td><td><code>"YYYY-MM-DD"</code></td></tr>
+            <tr><td>タイムスタンプ</td><td>integer mode timestamp</td><td><code>created_at</code></td></tr>
+            <tr><td>id</td><td>text（nanoid 等）</td><td>tasks / task_logs は nanoid</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>論理 ER</h2>
+      <pre><code>User 1 ── * Task 1 ── * TaskLog
+
+User
+├ id, name, email, email_verified, image
+└ created_at, updated_at
+
+Task
+├ id (PK)
+├ user_id (FK → users.id, cascade)
+├ name
+├ cycle_days (1–365)
+├ created_at, updated_at
+└ INDEX (user_id)
+
+TaskLog
+├ id (PK)
+├ task_id (FK → tasks.id, cascade)
+├ done_date "YYYY-MM-DD"
+├ created_at
+└ UNIQUE (task_id, done_date)
+  INDEX (task_id)
+
+Better Auth 付帯:
+  sessions (user_id), accounts (user_id), verifications</code></pre>
+      <figure class="diagram">
+        <figcaption>ER 概念図</figcaption>
+        <img src="../assets/diagrams/er-example.svg" alt="User・Task・TaskLog の関連を示す ER 概念図。">
+        <p class="zoom-hint">クリックで拡大</p>
+      </figure>
+
+      <h2>エンティティ一覧</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">エンティティ</th>
+              <th scope="col">テーブル</th>
+              <th scope="col">区分</th>
+              <th scope="col">概要</th>
+              <th scope="col">主な関連</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>User</td><td><code>users</code></td><td>認証</td><td>Google ログイン利用者</td><td>Task 1:*</td></tr>
+            <tr><td>Session</td><td><code>sessions</code></td><td>認証</td><td>Better Auth セッション</td><td>User N:1</td></tr>
+            <tr><td>Account</td><td><code>accounts</code></td><td>認証</td><td>OAuth プロバイダ紐付け</td><td>User N:1</td></tr>
+            <tr><td>Verification</td><td><code>verifications</code></td><td>認証</td><td>Better Auth 検証用</td><td>—</td></tr>
+            <tr><td>Task</td><td><code>tasks</code></td><td>ドメイン</td><td>掃除タスク</td><td>User N:1, TaskLog 1:*</td></tr>
+            <tr><td>TaskLog</td><td><code>task_logs</code></td><td>ドメイン</td><td>実施日1件</td><td>Task N:1。UNIQUE(task_id, done_date)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>属性詳細（物理）</h2>
+
+      <h3>users</h3>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">カラム</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">説明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>id</td><td>text PK</td><td>必須</td><td>ユーザー ID</td></tr>
+            <tr><td>name</td><td>text</td><td>必須</td><td>表示名</td></tr>
+            <tr><td>email</td><td>text unique</td><td>必須</td><td>メール</td></tr>
+            <tr><td>email_verified</td><td>integer bool</td><td>必須</td><td>既定 false</td></tr>
+            <tr><td>image</td><td>text</td><td>任意</td><td>アバター URL</td></tr>
+            <tr><td>created_at / updated_at</td><td>integer timestamp</td><td>必須</td><td>監査</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>tasks</h3>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">カラム</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">説明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>id</td><td>text PK</td><td>必須</td><td>nanoid</td></tr>
+            <tr><td>user_id</td><td>text FK</td><td>必須</td><td>→ users.id ON DELETE CASCADE。INDEX</td></tr>
+            <tr><td>name</td><td>text</td><td>必須</td><td>タスク名</td></tr>
+            <tr><td>cycle_days</td><td>integer</td><td>必須</td><td>目安周期 1–365（アプリ層で clamp）</td></tr>
+            <tr><td>created_at / updated_at</td><td>integer timestamp</td><td>必須</td><td>作成・更新</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>task_logs</h3>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">カラム</th><th scope="col">型</th><th scope="col">必須</th><th scope="col">説明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>id</td><td>text PK</td><td>必須</td><td>nanoid</td></tr>
+            <tr><td>task_id</td><td>text FK</td><td>必須</td><td>→ tasks.id ON DELETE CASCADE。INDEX</td></tr>
+            <tr><td>done_date</td><td>text</td><td>必須</td><td>YYYY-MM-DD。未来日はアプリ層で拒否</td></tr>
+            <tr><td>created_at</td><td>integer timestamp</td><td>必須</td><td>記録作成時刻</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>制約: <code>UNIQUE INDEX task_logs_task_date_uidx ON (task_id, done_date)</code></p>
+
+      <h3>sessions / accounts / verifications</h3>
+      <p>Better Auth の Drizzle アダプタが要求する標準テーブル。詳細カラムは <code>schema.ts</code> を正とする（token unique、expires_at、provider_id 等）。</p>
+
+      <h2>派生値（非永続）</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr><th scope="col">属性</th><th scope="col">算出（domain/task.ts）</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>lastDone</td><td>logs の最新日。なければ null</td></tr>
+            <tr><td>elapsedDays</td><td>today − lastDone。未記録 null</td></tr>
+            <tr><td>ratio</td><td>logs 空 → 1.0 / それ以外 elapsedDays / cycleDays</td></tr>
+            <tr><td>nextDue</td><td>lastDone + cycleDays。未記録 null</td></tr>
+            <tr><td>state</td><td>ratio ≥ 1.5 late / &gt; 1 warn / else normal</td></tr>
+            <tr><td>doneToday</td><td>lastDone === today</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>正規化方針</h2>
+      <ul>
+        <li>Task / TaskLog はリレーション分離（第3正規形に近い）。</li>
+        <li>実施日の重複は DB 一意制約で保証。</li>
+        <li>ユーザー横断の共有テーブルは MVP にない。</li>
+      </ul>
+    </div>
+    <nav class="page-nav">
+      <a class="page-nav-item" href="04_画面設計.html"><span class="page-nav-dir">← 前</span><span class="page-nav-title">画面設計</span><span class="page-nav-phase">02 基本設計</span></a>
+      <a class="page-nav-item page-nav-next" href="06_API設計.html"><span class="page-nav-dir">次 →</span><span class="page-nav-title">API設計</span><span class="page-nav-phase">02 基本設計</span></a>
+    </nav>
+    <div class="foot">おうち掃除ログ 設計書 · <a href="../index.html">インデックス</a></div>
+  </main>
+</div>
+<dialog class="zoom-dlg" id="zoomDlg">
+  <div class="zoom-bar">
+    <span class="title">図解</span>
+    <button type="button" data-z="out" title="縮小">−</button>
+    <button type="button" data-z="in" title="拡大">＋</button>
+    <button type="button" data-z="reset" title="全体表示">リセット</button>
+    <button type="button" data-z="close" title="閉じる">閉じる ✕</button>
+  </div>
+  <div class="zoom-stage" id="zoomStage"></div>
+</dialog>
+<script src="../assets/nav.js" defer></script>
+<script src="../assets/enhance.js" defer></script>
+</body>
+</html>

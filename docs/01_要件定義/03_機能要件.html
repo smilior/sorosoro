@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>機能要件 ｜ おうち掃除ログ 設計書</title>
+<meta name="description" content="おうち掃除ログ（sorosoro）が提供する機能・受け入れ基準・画面構成を定義する。F-00〜F-08、S-00〜S-04。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+</head>
+<body>
+<div class="wrap">
+  <aside id="sidePanel">
+    <div class="side-header">
+      <button type="button" class="side-toggle" id="sideToggle" aria-controls="sidePanel" aria-expanded="true" aria-label="メニューを閉じる" title="メニューを閉じる"><span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+      <div class="side-header-text">
+        <div class="brand"><a href="../index.html">設計書</a><small>おうち掃除ログ / sorosoro</small></div>
+        <div class="side-title"><a href="../index.html">おうち掃除ログ</a></div>
+      </div>
+    </div>
+    <nav class="side-nav" aria-label="ドキュメント一覧">
+      <div class="phase is-current">
+        <span class="phase-label"><a href="../index.html#01_要件定義">01 要件定義</a></span>
+        <ol>
+          <li><a href="../01_要件定義/01_プロジェクト概要.html"><span class="n">01</span>プロジェクト概要</a></li>
+          <li><a href="../01_要件定義/02_ペルソナ・ユーザーストーリー.html"><span class="n">02</span>ペルソナ・ユーザーストーリー</a></li>
+          <li><a class="active" href="../01_要件定義/03_機能要件.html"><span class="n">03</span>機能要件</a></li>
+          <li><a href="../01_要件定義/04_非機能要件.html"><span class="n">04</span>非機能要件</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#02_基本設計">02 基本設計</a></span>
+        <ol>
+          <li><a href="../02_基本設計/01_システム構成.html"><span class="n">01</span>システム構成</a></li>
+          <li><a href="../02_基本設計/02_用語集.html"><span class="n">02</span>用語集</a></li>
+          <li><a href="../02_基本設計/03_機能設計.html"><span class="n">03</span>機能設計</a></li>
+          <li><a href="../02_基本設計/04_画面設計.html"><span class="n">04</span>画面設計</a></li>
+          <li><a href="../02_基本設計/05_DB設計.html"><span class="n">05</span>DB設計(論理)</a></li>
+          <li><a href="../02_基本設計/06_API設計.html"><span class="n">06</span>API設計</a></li>
+          <li><a href="../02_基本設計/07_認可設計.html"><span class="n">07</span>認可設計</a></li>
+          <li><a href="../02_基本設計/adr/0000_ADRテンプレート.html"><span class="n">A0</span>ADR テンプレート</a></li>
+          <li><a href="../02_基本設計/adr/0001_技術スタック(テンプレート既定).html"><span class="n">A1</span>ADR 技術スタック</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#03_詳細設計">03 詳細設計</a></span>
+        <ol>
+          <li><a href="../03_詳細設計/01_処理設計.html"><span class="n">01</span>処理設計</a></li>
+          <li><a href="../03_詳細設計/02_テーブル定義.html"><span class="n">02</span>テーブル定義</a></li>
+          <li><a href="../03_詳細設計/03_単体テスト観点.html"><span class="n">03</span>単体テスト観点</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#04_テスト">04 テスト</a></span>
+        <ol>
+          <li><a href="../04_テスト/01_テスト計画.html"><span class="n">01</span>テスト計画</a></li>
+          <li><a href="../04_テスト/02_結合テストケース.html"><span class="n">02</span>結合テストケース</a></li>
+          <li><a href="../04_テスト/03_総合テストケース.html"><span class="n">03</span>総合テストケース</a></li>
+          <li><a href="../04_テスト/04_受け入れテストシナリオ.html"><span class="n">04</span>受け入れテストシナリオ</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#05_リリース">05 リリース</a></span>
+        <ol>
+          <li><a href="../05_リリース/01_リリース計画.html"><span class="n">01</span>リリース計画</a></li>
+          <li><a href="../05_リリース/02_リリースノート.html"><span class="n">02</span>リリースノート</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#06_運用">06 運用</a></span>
+        <ol>
+          <li><a href="../06_運用/01_監視・障害対応.html"><span class="n">01</span>監視・障害対応</a></li>
+          <li><a href="../06_運用/02_バックアップ・メンテナンス.html"><span class="n">02</span>バックアップ・メンテナンス</a></li>
+        </ol>
+      </div>
+    </nav>
+    <div class="side-meta">全 24 文書 + インデックス<br>正本: docs/_spec/PRODUCT_BRIEF.md</div>
+  </aside>
+  <main>
+    <div class="hero">
+      <div class="kicker">01 要件定義 · 03/04</div>
+      <h1>機能要件</h1>
+      <p class="lede">おうち掃除ログ（sorosoro）が提供する機能・受け入れ基準・画面構成を定義する。</p>
+    </div>
+    <div class="prose">
+      <div class="callout">
+        <p class="callout-title">確定メモ</p>
+        <p>機能 ID は <strong>F-00〜F-08</strong>、画面 ID は <strong>S-00 ログイン</strong> / S-01 ホーム / S-02 タスク登録・編集 / S-03 履歴 / S-04 記録シート。S-00 は実ログイン画面（Google OAuth）。</p>
+        <p>受け入れ基準は各 MVP 機能の Definition of Done。Given-When-Then をすべて満たせば完成とみなす。</p>
+        <p>コア仕様: ratio ソート、状態色（warn/late は淡色のみ）、同日重複ブロック、未来日不可、固定スケジュールなし。データは Turso にユーザー単位で保存する。</p>
+      </div>
+
+      <h2>機能一覧</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">機能名</th>
+              <th scope="col">区分</th>
+              <th scope="col">概要</th>
+              <th scope="col">対応画面</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>F-00</td><td>ログイン / ログアウト</td><td>必須</td><td>Better Auth + Google OAuth でサインイン。セッション Cookie を発行。ログアウトでセッションを破棄しログイン画面へ</td><td>S-00</td></tr>
+            <tr><td>F-01</td><td>タスク一覧（ホーム）</td><td>必須</td><td>ログインユーザーのタスクカードを ratio 降順で表示。状態色（通常 / warn / late）を淡色背景で付与。未記録・経過日メタを表示</td><td>S-01</td></tr>
+            <tr><td>F-02</td><td>1 タップ記録（今日）</td><td>必須</td><td>カード上の「今日やった」で今日を logs に追記（Server Action）。pop / flash / FLIP とトーストでフィードバック。確認ダイアログは出さない</td><td>S-01</td></tr>
+            <tr><td>F-03</td><td>過去日記録</td><td>必須</td><td>「今日やった」長押し、または履歴の記録シートから過去日を記録。未来日は不可</td><td>S-01, S-03, S-04</td></tr>
+            <tr><td>F-04</td><td>記録アンドゥ</td><td>必須</td><td>トーストの「元に戻す」で直前 1 件の記録を削除</td><td>S-01, S-03, S-04</td></tr>
+            <tr><td>F-05</td><td>タスク登録</td><td>必須</td><td>名前 + 周期（プリセット 7/14/30 日または 1〜365 の数値）で新規登録。user_id に紐づけて Turso に保存</td><td>S-02</td></tr>
+            <tr><td>F-06</td><td>タスク編集・削除</td><td>必須</td><td>名前・周期の変更。削除は履歴ごと削除のインライン二段確認（confirm ダイアログは使わない）</td><td>S-02</td></tr>
+            <tr><td>F-07</td><td>履歴画面</td><td>必須</td><td>サマリー（目安周期 / 前回 / 次の目安）と実施日リスト。日付選択記録導線</td><td>S-03, S-04</td></tr>
+            <tr><td>F-08</td><td>クラウド永続化</td><td>必須</td><td>tasks / task_logs を Turso（libSQL）にユーザー単位で保存・復元。派生値（lastDone / elapsedDays / ratio / nextDue）は永続化しない</td><td>全画面（要ログイン）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>受け入れ基準</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">機能ID</th>
+              <th scope="col">ID</th>
+              <th scope="col">Given(前提)</th>
+              <th scope="col">When(操作)</th>
+              <th scope="col">Then(期待結果)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>F-00</td><td>AC-00</td><td>未ログインでアプリにアクセスする</td><td>保護された画面（S-01 等）を開こうとする</td><td>S-00 ログイン画面へ誘導される</td></tr>
+            <tr><td>F-00</td><td>AC-00b</td><td>S-00 を表示している</td><td>「Google でログイン」を選び OAuth を完了する</td><td>セッションが確立し、自分のタスクがあるホーム（S-01）へ遷移する。初回はサンプルタスクが投入されてもよい</td></tr>
+            <tr><td>F-00</td><td>AC-00c</td><td>ログイン済み</td><td>ログアウトを実行する</td><td>セッションが破棄され、S-00 へ戻る。他ユーザーのデータは見えない</td></tr>
+            <tr><td>F-01</td><td>AC-01</td><td>ログイン済みでタスクが 1 件以上存在する</td><td>ホームを表示する</td><td>カードが ratio 降順（同率は elapsed 降順。未記録は elapsed 最大扱い）で並ぶ</td></tr>
+            <tr><td>F-01</td><td>AC-02</td><td>ratio &gt; 1 のタスクと ratio ≥ 1.5 のタスクがある</td><td>ホームを表示する</td><td>warn は黄系淡背景、late は赤系淡背景。警告アイコンや強い赤は出ない</td></tr>
+            <tr><td>F-01</td><td>AC-03</td><td>ログイン済みでタスクが 0 件</td><td>ホームを表示する</td><td>「まだタスクがありません」と ＋ からの登録誘導が表示される</td></tr>
+            <tr><td>F-02</td><td>AC-04</td><td>ホームに未記録（当日未記録）のタスクがある</td><td>「今日やった」を 1 回タップする</td><td>確認なしで今日が logs に入り、ボタンが「記録済み」になり、トーストと pop/flash/FLIP が起きる</td></tr>
+            <tr><td>F-02</td><td>AC-05</td><td>当日すでに記録済みのタスクがある</td><td>「今日やった」を再度タップする</td><td>追加されず、トースト「その日はすでに記録済みです」が表示される</td></tr>
+            <tr><td>F-03</td><td>AC-06</td><td>ホームにタスクがある</td><td>「今日やった」を 480ms 以上長押しする</td><td>記録シート（S-04）が開き、長押し後の click は記録されない</td></tr>
+            <tr><td>F-03</td><td>AC-07</td><td>記録シートが開いている</td><td>昨日 / おととい / date 入力で未記録日を選んで記録する</td><td>選択日が logs に入り、同日重複はブロックされる。未来日は選択・記録できない</td></tr>
+            <tr><td>F-04</td><td>AC-08</td><td>記録直後のアンドゥ付きトーストが表示中</td><td>「元に戻す」をタップする</td><td>直前に追加した記録 1 件が削除され、一覧・履歴が更新される</td></tr>
+            <tr><td>F-05</td><td>AC-09</td><td>タスク登録画面を開いている</td><td>名前を入力し周期を選び保存する</td><td>ホームに新タスクが現れ、Turso に当該ユーザーのタスクとして永続化される</td></tr>
+            <tr><td>F-05</td><td>AC-10</td><td>タスク登録画面を開いている</td><td>名前が空、または周期が不正</td><td>保存ボタンが disabled のまま保存できない</td></tr>
+            <tr><td>F-06</td><td>AC-11</td><td>既存タスクの編集画面を開いている</td><td>名前・周期を変更して保存する</td><td>ホーム・履歴に反映され、既存 logs は保持される</td></tr>
+            <tr><td>F-06</td><td>AC-12</td><td>編集画面で削除を開始した</td><td>二段確認で「削除する」を選ぶ</td><td>タスクと履歴が消えホームへ戻る。「やめる」では削除されない</td></tr>
+            <tr><td>F-07</td><td>AC-13</td><td>記録があるタスクの履歴を開いている</td><td>画面を表示する</td><td>サマリー（目安 / 前回 / 次の目安「ごろ」表記）と実施日リストが表示される</td></tr>
+            <tr><td>F-07</td><td>AC-14</td><td>履歴画面を開いている</td><td>「＋ 日付を選んで記録」をタップする</td><td>記録シートが開き、記録後にリストへ反映される</td></tr>
+            <tr><td>F-08</td><td>AC-15</td><td>タスクまたは記録を追加・変更した</td><td>別端末または再ログイン後にホームを開く</td><td>同一ユーザーの Turso データが復元され、データが失われない。他ユーザーのタスクは一切表示されない</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>画面一覧</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">画面名</th>
+              <th scope="col">概要</th>
+              <th scope="col">対応機能</th>
+              <th scope="col">認証要否</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>S-00</td><td>ログイン</td><td>Google OAuth によるサインイン導線。未ログイン時の入口</td><td>F-00</td><td>不要</td></tr>
+            <tr><td>S-01</td><td>ホーム</td><td>日付・タスクカード一覧・1 タップ記録・＋ 追加導線。ログイン後の主画面</td><td>F-01, F-02, F-03, F-04, F-08</td><td>要</td></tr>
+            <tr><td>S-02</td><td>タスク登録 / 編集</td><td>名前・周期・保存。編集時は削除（二段確認）</td><td>F-05, F-06, F-08</td><td>要</td></tr>
+            <tr><td>S-03</td><td>履歴</td><td>サマリー・過去記録リスト・編集導線・日付選択記録</td><td>F-03, F-04, F-07, F-08</td><td>要</td></tr>
+            <tr><td>S-04</td><td>記録シート</td><td>ボトムシート。今日 / 昨日 / おととい + date 入力で記録</td><td>F-03, F-04, F-08</td><td>要</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>画面遷移図</h2>
+      <figure class="diagram">
+        <figcaption>画面遷移図（MVP・Google ログイン必須）</figcaption>
+        <img src="../assets/diagrams/screen-flow.svg" alt="ログイン後ホームを起点にタスク登録/編集・履歴へ遷移し、履歴とホームから記録シートを開く">
+        <p class="zoom-hint">クリックで拡大</p>
+      </figure>
+      <p>遷移の要点（実装・受け入れ時の正）:</p>
+      <ul>
+        <li>未ログインで保護画面へ → <strong>S-00 ログイン</strong>。Google OAuth 完了後 → <strong>S-01 ホーム</strong></li>
+        <li>S-01 の ＋ → S-02（新規）。カード本体タップ → S-03。カードの記録ボタンは履歴へ遷移しない</li>
+        <li>S-03 の「編集」→ S-02。戻るは開いた元（ホームまたは履歴）へ</li>
+        <li>S-01 長押し / S-03「日付を選んで記録」→ S-04。背景タップまたはキャンセルで閉じる</li>
+        <li>タスク削除後 → S-01。ログアウト → S-00</li>
+      </ul>
+    </div>
+    <nav class="page-nav">
+      <a class="page-nav-item" href="02_ペルソナ・ユーザーストーリー.html"><span class="page-nav-dir">← 前</span><span class="page-nav-title">ペルソナ・ユーザーストーリー</span><span class="page-nav-phase">01 要件定義</span></a>
+      <a class="page-nav-item page-nav-next" href="04_非機能要件.html"><span class="page-nav-dir">次 →</span><span class="page-nav-title">非機能要件</span><span class="page-nav-phase">01 要件定義</span></a>
+    </nav>
+    <div class="foot">おうち掃除ログ 設計書 · <a href="../index.html">インデックス</a></div>
+  </main>
+</div>
+<dialog class="zoom-dlg" id="zoomDlg">
+  <div class="zoom-bar">
+    <span class="title">図解</span>
+    <button type="button" data-z="out" title="縮小">−</button>
+    <button type="button" data-z="in" title="拡大">＋</button>
+    <button type="button" data-z="reset" title="全体表示">リセット</button>
+    <button type="button" data-z="close" title="閉じる">閉じる ✕</button>
+  </div>
+  <div class="zoom-stage" id="zoomStage"></div>
+</dialog>
+<script src="../assets/nav.js" defer></script>
+<script src="../assets/enhance.js" defer></script>
+</body>
+</html>

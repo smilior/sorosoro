@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>用語集 ｜ おうち掃除ログ 設計書</title>
+<meta name="description" content="おうち掃除ログのドメイン用語とインフラ用語を統一する。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/base.css">
+</head>
+<body>
+<div class="wrap">
+  <aside id="sidePanel">
+    <div class="side-header">
+      <button type="button" class="side-toggle" id="sideToggle" aria-controls="sidePanel" aria-expanded="true" aria-label="メニューを閉じる" title="メニューを閉じる"><span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+      <div class="side-header-text">
+        <div class="brand"><a href="../index.html">設計書</a><small>おうち掃除ログ / sorosoro</small></div>
+        <div class="side-title"><a href="../index.html">おうち掃除ログ</a></div>
+      </div>
+    </div>
+    <nav class="side-nav" aria-label="ドキュメント一覧">
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#01_要件定義">01 要件定義</a></span>
+        <ol>
+          <li><a href="../01_要件定義/01_プロジェクト概要.html"><span class="n">01</span>プロジェクト概要</a></li>
+          <li><a href="../01_要件定義/02_ペルソナ・ユーザーストーリー.html"><span class="n">02</span>ペルソナ・ユーザーストーリー</a></li>
+          <li><a href="../01_要件定義/03_機能要件.html"><span class="n">03</span>機能要件</a></li>
+          <li><a href="../01_要件定義/04_非機能要件.html"><span class="n">04</span>非機能要件</a></li>
+        </ol>
+      </div>
+      <div class="phase is-current">
+        <span class="phase-label"><a href="../index.html#02_基本設計">02 基本設計</a></span>
+        <ol>
+          <li><a href="../02_基本設計/01_システム構成.html"><span class="n">01</span>システム構成</a></li>
+          <li><a class="active" href="../02_基本設計/02_用語集.html"><span class="n">02</span>用語集</a></li>
+          <li><a href="../02_基本設計/03_機能設計.html"><span class="n">03</span>機能設計</a></li>
+          <li><a href="../02_基本設計/04_画面設計.html"><span class="n">04</span>画面設計</a></li>
+          <li><a href="../02_基本設計/05_DB設計.html"><span class="n">05</span>DB設計(論理)</a></li>
+          <li><a href="../02_基本設計/06_API設計.html"><span class="n">06</span>API設計</a></li>
+          <li><a href="../02_基本設計/07_認可設計.html"><span class="n">07</span>認可設計</a></li>
+          <li><a href="../02_基本設計/adr/0000_ADRテンプレート.html"><span class="n">A0</span>ADR テンプレート</a></li>
+          <li><a href="../02_基本設計/adr/0001_技術スタック(テンプレート既定).html"><span class="n">A1</span>ADR-0001（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0002_ローカルファースト技術スタック.html"><span class="n">A2</span>ADR-0002（廃止）</a></li>
+          <li><a href="../02_基本設計/adr/0003_menva同型スタック(Vercel+Turso+BetterAuth).html"><span class="n">A3</span>ADR-0003 技術スタック</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#03_詳細設計">03 詳細設計</a></span>
+        <ol>
+          <li><a href="../03_詳細設計/01_処理設計.html"><span class="n">01</span>処理設計</a></li>
+          <li><a href="../03_詳細設計/02_テーブル定義.html"><span class="n">02</span>テーブル定義</a></li>
+          <li><a href="../03_詳細設計/03_単体テスト観点.html"><span class="n">03</span>単体テスト観点</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#04_テスト">04 テスト</a></span>
+        <ol>
+          <li><a href="../04_テスト/01_テスト計画.html"><span class="n">01</span>テスト計画</a></li>
+          <li><a href="../04_テスト/02_結合テストケース.html"><span class="n">02</span>結合テストケース</a></li>
+          <li><a href="../04_テスト/03_総合テストケース.html"><span class="n">03</span>総合テストケース</a></li>
+          <li><a href="../04_テスト/04_受け入れテストシナリオ.html"><span class="n">04</span>受け入れテストシナリオ</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#05_リリース">05 リリース</a></span>
+        <ol>
+          <li><a href="../05_リリース/01_リリース計画.html"><span class="n">01</span>リリース計画</a></li>
+          <li><a href="../05_リリース/02_リリースノート.html"><span class="n">02</span>リリースノート</a></li>
+        </ol>
+      </div>
+      <div class="phase">
+        <span class="phase-label"><a href="../index.html#06_運用">06 運用</a></span>
+        <ol>
+          <li><a href="../06_運用/01_監視・障害対応.html"><span class="n">01</span>監視・障害対応</a></li>
+          <li><a href="../06_運用/02_バックアップ・メンテナンス.html"><span class="n">02</span>バックアップ・メンテナンス</a></li>
+        </ol>
+      </div>
+    </nav>
+    <div class="side-meta">おうち掃除ログ / sorosoro<br>正本: PRODUCT_BRIEF · ADR-0003</div>
+  </aside>
+  <main>
+    <div class="hero">
+      <div class="kicker">02 基本設計 · 02/07</div>
+      <h1>用語集（ユビキタス言語）</h1>
+      <p class="lede">おうち掃除ログのドメイン用語とインフラ用語を統一する。日本語名・英語名・コード上の命名・定義を1対1で対応させる。</p>
+    </div>
+    <div class="prose">
+      <div class="callout">
+        <p class="callout-title">確定メモ</p>
+        <p>ドメインの正は <code>docs/_spec/PRODUCT_BRIEF.md</code> と <code>src/lib/domain/task.ts</code>。DB カラムは snake_case（schema.ts）、TypeScript プロパティは camelCase。</p>
+      </div>
+
+      <h2>命名規約</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">種別</th>
+              <th scope="col">規約</th>
+              <th scope="col">例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>論理エンティティ</td><td>英語 PascalCase</td><td><code>Task</code>, <code>TaskLog</code>, <code>User</code></td></tr>
+            <tr><td>DB テーブル / カラム</td><td>snake_case</td><td><code>tasks</code>, <code>cycle_days</code>, <code>user_id</code></td></tr>
+            <tr><td>TS プロパティ</td><td>camelCase</td><td><code>cycleDays</code>, <code>userId</code>, <code>doneDate</code></td></tr>
+            <tr><td>実施日</td><td>ISO 日付文字列</td><td><code>"YYYY-MM-DD"</code></td></tr>
+            <tr><td>派生値</td><td>永続化しない。都度計算</td><td><code>ratio</code>, <code>elapsedDays</code>, <code>state</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>ドメイン用語</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">日本語名</th>
+              <th scope="col">英語名</th>
+              <th scope="col">コード上の命名</th>
+              <th scope="col">定義</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>ユーザー</td><td>User</td><td><code>users</code> / <code>userId</code></td><td>Google ログインした個人。タスクの所有者。MVP では共有なし</td></tr>
+            <tr><td>タスク</td><td>Task</td><td><code>tasks</code> / <code>Task</code></td><td>掃除の単位（例: シーツ洗い）。id・user_id・name・cycle_days を持つ。予定やカレンダーイベントではない</td></tr>
+            <tr><td>記録 / ログ</td><td>TaskLog</td><td><code>task_logs</code> / <code>doneDate</code></td><td>タスクの実施日1件。<code>"YYYY-MM-DD"</code>。同一タスク同一日は重複不可（UNIQUE）</td></tr>
+            <tr><td>目安周期</td><td>Cycle days</td><td><code>cycle_days</code> / <code>cycleDays</code></td><td>次にやりたい目安までの日数（1–365）。厳守期限ではない</td></tr>
+            <tr><td>前回実施日</td><td>Last done</td><td><code>lastDone</code></td><td>logs の最新日。未記録時は null。永続化せず計算</td></tr>
+            <tr><td>経過日数</td><td>Elapsed days</td><td><code>elapsedDays</code></td><td>today − lastDone（日付単位）。未記録時は null。永続化せず計算</td></tr>
+            <tr><td>超過比</td><td>Ratio</td><td><code>ratio</code></td><td>logs 空 → 1.0 / それ以外 → elapsedDays / cycleDays。並び順の主キー。永続化せず計算</td></tr>
+            <tr><td>次の目安</td><td>Next due</td><td><code>nextDue</code></td><td>lastDone + cycleDays。未記録時は null。「ごろ」表記。固定デッドラインではない</td></tr>
+            <tr><td>遅れ気味</td><td>Late</td><td><code>late</code></td><td>ratio ≥ 1.5。late-bg の淡赤背景のみ。警告アイコン・強い赤は禁止</td></tr>
+            <tr><td>やや超過</td><td>Warn</td><td><code>warn</code></td><td>ratio &gt; 1 かつ &lt; 1.5。warn-bg の淡黄背景のみ</td></tr>
+            <tr><td>記録シート</td><td>Record sheet</td><td>S-04 / ボトムシート</td><td>過去日記録用。今日/昨日/おととい + date 入力</td></tr>
+            <tr><td>アンドゥ</td><td>Undo</td><td><code>undoRecordAction</code></td><td>トースト等から直前の記録1件を削除する操作</td></tr>
+            <tr><td>目安</td><td>Guideline</td><td>（UI 文言）</td><td>cycleDays や nextDue を指す柔らかな表現。「期限」「締め切り」は使わない</td></tr>
+            <tr><td>責めないUI</td><td>Non-shaming UI</td><td>（設計原則）</td><td>サボりを責めない。期限切れバッジ・強い赤・未消化の積み上げ表現を出さない</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>インフラ用語</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">日本語名</th>
+              <th scope="col">英語名</th>
+              <th scope="col">コード上の命名</th>
+              <th scope="col">定義</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Turso</td><td>Turso / libSQL</td><td><code>TURSO_DATABASE_URL</code></td><td>クラウド（およびローカル sqld）の libSQL DB。ユーザー単位データの永続先</td></tr>
+            <tr><td>Drizzle</td><td>Drizzle ORM</td><td><code>drizzle-orm</code> / schema.ts</td><td>型安全な SQL アクセス層</td></tr>
+            <tr><td>Better Auth</td><td>Better Auth</td><td><code>better-auth</code> / <code>/api/auth/*</code></td><td>認証ライブラリ。Google OAuth とセッション Cookie を提供</td></tr>
+            <tr><td>セッション Cookie</td><td>Session cookie</td><td><code>better-auth.session_token</code></td><td>ログイン状態。Middleware が <code>/home</code> 等をゲート。本番は <code>__Secure-</code> 接頭もあり</td></tr>
+            <tr><td>Server Action</td><td>Server Action</td><td><code>src/actions/tasks.ts</code></td><td>Next.js のサーバー側ミューテーション/取得。アプリ API の正</td></tr>
+            <tr><td>user_id 分離</td><td>User isolation</td><td><code>tasks.user_id</code></td><td>全タスク操作を <code>session.user.id === tasks.user_id</code> でスコープする</td></tr>
+            <tr><td>Middleware</td><td>Middleware</td><td><code>src/middleware.ts</code></td><td>Cookie 有無で保護パスへリダイレクト</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>使わない語</h2>
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">避けたい語</th>
+              <th scope="col">代わりに使う語</th>
+              <th scope="col">理由</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>期限 / 締め切り / 期限切れ</td><td>目安 / 次の目安</td><td>責めない思想</td></tr>
+            <tr><td>未消化 / 滞留 / 遅延アラート</td><td>経過日数 / ratio 状態色</td><td>溜まり表現をしない</td></tr>
+            <tr><td>会員 / 顧客</td><td>ユーザー（ログイン個人）</td><td>B2C 個人メモ感覚</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <nav class="page-nav">
+      <a class="page-nav-item" href="01_システム構成.html"><span class="page-nav-dir">← 前</span><span class="page-nav-title">システム構成</span><span class="page-nav-phase">02 基本設計</span></a>
+      <a class="page-nav-item page-nav-next" href="03_機能設計.html"><span class="page-nav-dir">次 →</span><span class="page-nav-title">機能設計</span><span class="page-nav-phase">02 基本設計</span></a>
+    </nav>
+    <div class="foot">おうち掃除ログ 設計書 · <a href="../index.html">インデックス</a></div>
+  </main>
+</div>
+<dialog class="zoom-dlg" id="zoomDlg">
+  <div class="zoom-bar">
+    <span class="title">図解</span>
+    <button type="button" data-z="out" title="縮小">−</button>
+    <button type="button" data-z="in" title="拡大">＋</button>
+    <button type="button" data-z="reset" title="全体表示">リセット</button>
+    <button type="button" data-z="close" title="閉じる">閉じる ✕</button>
+  </div>
+  <div class="zoom-stage" id="zoomStage"></div>
+</dialog>
+<script src="../assets/nav.js" defer></script>
+<script src="../assets/enhance.js" defer></script>
+</body>
+</html>

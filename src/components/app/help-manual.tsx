@@ -3,15 +3,10 @@ import Link from "next/link";
 /** アプリ内ヘルプ。文言は短く事実だけ。モックはキャプチャ代わりの画面見本。 */
 export function HelpManual({ backHref = "/home" }: { backHref?: string }) {
   return (
-    <div
-      className="min-h-dvh flex justify-center"
-      style={{ background: "var(--desk)" }}
-    >
-      <div
-        className="w-full max-w-[402px] min-h-dvh flex flex-col"
-        style={{ background: "var(--bg)", color: "var(--ink)" }}
-      >
-        <header className="px-4 pt-[max(16px,env(safe-area-inset-top))] pb-3 flex items-center gap-2 sticky top-0 z-10"
+    <div className="app-shell">
+      <div className="app-frame">
+        <header
+          className="px-4 pt-[max(12px,env(safe-area-inset-top))] pb-3 flex items-center gap-2 shrink-0 z-10"
           style={{ background: "var(--bg)" }}
         >
           <Link
@@ -33,7 +28,7 @@ export function HelpManual({ backHref = "/home" }: { backHref?: string }) {
           <h1 className="text-[18px] font-bold flex-1">ヘルプ</h1>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-4 pb-12">
+        <div className="app-scroll px-4 pb-[max(3rem,env(safe-area-inset-bottom))]">
           <section className="mb-8">
             <h2 className="text-[13px] font-bold tracking-wide mb-2" style={{ color: "var(--sub)" }}>
               概要

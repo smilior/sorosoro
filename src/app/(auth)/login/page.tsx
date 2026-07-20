@@ -28,12 +28,9 @@ function LoginContent() {
   };
 
   return (
-    <div
-      className="min-h-dvh flex items-center justify-center p-6"
-      style={{ background: "var(--desk)" }}
-    >
+    <div className="app-shell items-center p-5 sm:p-6">
       <div
-        className="w-full max-w-[380px] rounded-[28px] p-8 shadow-sm"
+        className="w-full max-w-[400px] rounded-[28px] p-7 sm:p-8 shadow-sm"
         style={{
           background: "var(--card)",
           boxShadow: "var(--shadow)",

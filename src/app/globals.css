@@ -20,7 +20,15 @@
   --toast-c: #fbf8f2;
   --del: #bc6248;
   --shadow: 0 1px 3px rgba(80, 70, 55, 0.06);
+  /* 画面いっぱい（iOS アドレスバー対策: svh + dvh） */
+  --app-height: 100svh;
   color-scheme: light;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --app-height: 100dvh;
+  }
 }
 
 .dark {
@@ -44,20 +52,115 @@
   color-scheme: dark;
 }
 
-html,
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  /* iOS の文字タップ時の勝手な拡大を抑止 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* スクロールバー出現で横がずれないように */
+  scrollbar-gutter: stable;
+}
+
 body {
   margin: 0;
   min-height: 100%;
+  min-height: var(--app-height);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
   background: var(--desk);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
 }
 
-button,
-input {
+/* アプリシェル: 画面幅いっぱいに合わせる（狭い幅制限はデスクトップのみ） */
+.app-shell {
+  width: 100%;
+  max-width: 100%;
+  min-height: var(--app-height);
+  height: var(--app-height);
+  display: flex;
+  justify-content: center;
+  background: var(--desk);
+  overflow: hidden;
+}
+
+.app-frame {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: var(--app-height);
+  height: var(--app-height);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* タブレット以上だけ読みやすい幅に */
+@media (min-width: 640px) {
+  .app-frame {
+    max-width: 430px;
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+}
+
+.app-screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/*
+ * iOS Safari: 16px 未満の input にフォーカスすると画面がズームしてずれる。
+ * すべての入力を 16px 以上に固定。
+ */
+input,
+textarea,
+select {
   font-family: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  max-width: 100%;
+}
+
+button {
+  font-family: inherit;
+  /* タップで選択範囲が広がってレイアウトが動かないように */
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/* フォーカス時のアウトラインは残しつつ、ズーム起因のジャンプを防ぐ */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
 }
 
 @keyframes screenIn {

@@ -387,14 +387,11 @@ export function HomeApp({ userName }: { userName?: string | null }) {
   };
 
   return (
-    <div className="min-h-dvh flex justify-center" style={{ background: "var(--desk)" }}>
-      <div
-        className="relative w-full max-w-[402px] min-h-dvh flex flex-col overflow-hidden"
-        style={{ background: "var(--bg)", color: "var(--ink)" }}
-      >
+    <div className="app-shell">
+      <div className="app-frame">
         {screen === "home" && (
-          <div className="anim-screen flex flex-col h-full min-h-dvh">
-            <header className="px-5 pt-[max(20px,env(safe-area-inset-top))] pb-2.5 flex items-end justify-between gap-3">
+          <div className="anim-screen app-screen">
+            <header className="px-5 pt-[max(12px,env(safe-area-inset-top))] pb-2.5 flex items-end justify-between gap-3 shrink-0">
               <div className="min-w-0">
                 <div className="text-[12px] font-bold tracking-wider" style={{ color: "var(--sub)" }}>
                   おうち掃除ログ
@@ -437,7 +434,7 @@ export function HomeApp({ userName }: { userName?: string | null }) {
               </div>
             </header>
 
-            <div className="flex-1 overflow-y-auto px-4 pt-2.5 pb-24 flex flex-col gap-2.5">
+            <div className="app-scroll px-4 pt-2.5 pb-[max(5.5rem,env(safe-area-inset-bottom))] flex flex-col gap-2.5">
               {loading && (
                 <div className="text-center py-16 text-[13px]" style={{ color: "var(--sub)" }}>
                   読み込み中…
@@ -534,7 +531,9 @@ export function HomeApp({ userName }: { userName?: string | null }) {
               )}
             </div>
 
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-4">
+            <div className="absolute bottom-0 left-0 right-0 flex justify-center items-center gap-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2"
+              style={{ background: "linear-gradient(transparent, var(--bg) 40%)" }}
+            >
               <Link
                 href="/help"
                 className="text-[12px] font-medium px-3 py-2"
@@ -563,14 +562,14 @@ export function HomeApp({ userName }: { userName?: string | null }) {
         )}
 
         {screen === "edit" && (
-          <div className="anim-screen flex flex-col min-h-dvh">
-            <header className="px-4 pt-[max(16px,env(safe-area-inset-top))] pb-3 flex items-center gap-2">
+          <div className="anim-screen app-screen">
+            <header className="px-4 pt-[max(12px,env(safe-area-inset-top))] pb-3 flex items-center gap-2 shrink-0">
               <BackButton onClick={goBack} />
               <h1 className="text-[18px] font-bold flex-1">
                 {editId ? "タスクを編集" : "タスクを追加"}
               </h1>
             </header>
-            <div className="flex-1 px-4 pb-8">
+            <div className="app-scroll px-4 pb-[max(2rem,env(safe-area-inset-bottom))]">
               <label className="block text-[12px] font-bold mb-2" style={{ color: "var(--sub)" }}>
                 タスク名
               </label>
@@ -578,11 +577,12 @@ export function HomeApp({ userName }: { userName?: string | null }) {
                 value={fName}
                 onChange={(e) => setFName(e.target.value)}
                 placeholder="例：シーツ洗い"
-                className="w-full rounded-2xl border-[1.5px] px-4 py-3.5 text-[16px] outline-none"
+                className="w-full rounded-2xl border-[1.5px] px-4 py-3.5 outline-none"
                 style={{
                   background: "var(--card)",
                   borderColor: "var(--line)",
                   color: "var(--ink)",
+                  fontSize: 16,
                 }}
               />
 
@@ -640,11 +640,12 @@ export function HomeApp({ userName }: { userName?: string | null }) {
                     }
                     setFCycle(n);
                   }}
-                  className="w-[86px] rounded-2xl border text-center py-2.5 text-[15px] font-bold"
+                  className="w-[96px] rounded-2xl border text-center py-2.5 font-bold"
                   style={{
                     background: "var(--card)",
                     borderColor: fCycleError ? "var(--del)" : "var(--line)",
                     color: "var(--ink)",
+                    fontSize: 16,
                   }}
                   aria-invalid={!!fCycleError}
                   aria-describedby={fCycleError ? "cycle-error" : undefined}
@@ -721,8 +722,8 @@ export function HomeApp({ userName }: { userName?: string | null }) {
         )}
 
         {screen === "history" && historyTask && (
-          <div className="anim-screen flex flex-col min-h-dvh">
-            <header className="px-4 pt-[max(16px,env(safe-area-inset-top))] pb-3 flex items-center gap-2">
+          <div className="anim-screen app-screen">
+            <header className="px-4 pt-[max(12px,env(safe-area-inset-top))] pb-3 flex items-center gap-2 shrink-0">
               <BackButton onClick={() => setScreen("home")} />
               <h1 className="text-[18px] font-bold flex-1 truncate">{historyTask.name}</h1>
               <button
@@ -734,7 +735,7 @@ export function HomeApp({ userName }: { userName?: string | null }) {
                 編集
               </button>
             </header>
-            <div className="px-4 pb-8">
+            <div className="app-scroll px-4 pb-[max(2rem,env(safe-area-inset-bottom))]">
               <div
                 className="rounded-[20px] p-4 grid gap-3"
                 style={{
@@ -823,7 +824,7 @@ export function HomeApp({ userName }: { userName?: string | null }) {
             onClick={() => setSheetTaskId(null)}
           >
             <div
-              className="anim-sheet w-full max-w-[402px] rounded-t-[28px] px-5 pt-3 pb-[max(20px,env(safe-area-inset-bottom))]"
+              className="anim-sheet w-full max-w-full sm:max-w-[430px] rounded-t-[28px] px-5 pt-3 pb-[max(20px,env(safe-area-inset-bottom))]"
               style={{ background: "var(--sheet)" }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -863,11 +864,12 @@ export function HomeApp({ userName }: { userName?: string | null }) {
                   max={today}
                   value={sheetDate}
                   onChange={(e) => setSheetDate(e.target.value)}
-                  className="flex-1 rounded-2xl border px-3 py-3 text-[14px]"
+                  className="flex-1 min-w-0 rounded-2xl border px-3 py-3"
                   style={{
                     background: "var(--card)",
                     borderColor: "var(--line)",
                     color: "var(--ink)",
+                    fontSize: 16,
                   }}
                 />
                 <button

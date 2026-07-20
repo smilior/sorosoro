@@ -100,7 +100,9 @@ npm run dev
 
 ブラウザで [http://localhost:3000](http://localhost:3000) → Google ログイン → ホーム。
 
-初回ログイン時はタスク0件の空状態です（右上の＋から登録）。
+初回ログイン時:
+- **development** (`npm run dev`): タスク0件ならサンプルを自動投入
+- **production / preview**: 空状態（右上の＋から登録）
 
 ---
 

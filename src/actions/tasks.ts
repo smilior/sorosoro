@@ -231,3 +231,66 @@ export async function undoRecordAction(input: {
   }
 }
 
+/**
+ * 開発環境のみ: タスク0件のときサンプルを投入する。
+ * production / preview では no-op。
+ */
+export async function seedIfEmptyAction(): Promise<
+  ActionResult<{ seeded: boolean }>
+> {
+  if (process.env.NODE_ENV !== "development") {
+    return { ok: true, data: { seeded: false } };
+  }
+
+  try {
+    const userId = await requireUserId();
+    const existing = await db.query.tasks.findFirst({
+      where: eq(tasks.userId, userId),
+    });
+    if (existing) return { ok: true, data: { seeded: false } };
+
+    const today = todayYmd();
+    const samples = [
+      { name: "シーツ洗い", cycleDays: 7, offset: 12 },
+      { name: "風呂の排水口", cycleDays: 14, offset: 20 },
+      { name: "レンジフード", cycleDays: 30, offset: 5 },
+      { name: "トイレの床", cycleDays: 7, offset: 3 },
+    ];
+
+    for (const s of samples) {
+      const [row] = await db
+        .insert(tasks)
+        .values({
+          userId,
+          name: s.name,
+          cycleDays: s.cycleDays,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .returning({ id: tasks.id });
+
+      const d = new Date();
+      d.setDate(d.getDate() - s.offset);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const doneDate = `${y}-${m}-${day}`;
+      if (doneDate <= today) {
+        await db.insert(taskLogs).values({
+          taskId: row.id,
+          doneDate,
+          createdAt: new Date(),
+        });
+      }
+    }
+
+    revalidatePath("/");
+    return { ok: true, data: { seeded: true } };
+  } catch (e) {
+    if (e instanceof Error && e.message === "UNAUTHORIZED") {
+      return { ok: false, error: "ログインが必要です" };
+    }
+    console.error(e);
+    return { ok: false, error: "サンプル作成に失敗しました" };
+  }
+}

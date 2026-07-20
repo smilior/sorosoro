@@ -13,6 +13,7 @@ import {
   deleteTaskAction,
   listTasksAction,
   recordDoneAction,
+  seedIfEmptyAction,
   undoRecordAction,
   updateTaskAction,
 } from "@/actions/tasks";
@@ -104,7 +105,11 @@ export function HomeApp({ userName }: { userName?: string | null }) {
   }, []);
 
   useEffect(() => {
-    void refresh();
+    (async () => {
+      // サーバー側でも NODE_ENV===development のときだけ seed する
+      await seedIfEmptyAction();
+      await refresh();
+    })();
   }, [refresh]);
 
   useEffect(() => {

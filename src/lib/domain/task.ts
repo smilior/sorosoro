@@ -68,7 +68,9 @@ export function deriveTask(task: TaskWithLogs, today: string): DerivedTask {
     ratio,
     nextDue,
     state,
-    doneToday: lastDone === today,
+    // 最終記録日だけでなく「今日の日付が logs に含まれるか」で判定する
+    // （取り消し後に lastDone だけ見ると不整合が起きにくい）
+    doneToday: logs.includes(today),
   };
 }
 

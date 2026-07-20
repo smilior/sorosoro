@@ -17,7 +17,12 @@ import {
   undoRecordAction,
   updateTaskAction,
 } from "@/actions/tasks";
-import type { DerivedTask } from "@/lib/domain/task";
+import {
+  deriveTask,
+  sortTasks,
+  todayYmd,
+  type DerivedTask,
+} from "@/lib/domain/task";
 import { signOut } from "@/lib/auth-client";
 
 type Screen = "home" | "edit" | "history";
@@ -73,7 +78,8 @@ function emColor(state: DerivedTask["state"]) {
 
 export function HomeApp({ userName }: { userName?: string | null }) {
   const [tasks, setTasks] = useState<DerivedTask[]>([]);
-  const [today, setToday] = useState("");
+  /** 端末ローカルの今日（サーバー UTC とのずれを避ける） */
+  const [today, setToday] = useState(() => todayYmd());
   const [screen, setScreen] = useState<Screen>("home");
   const [editId, setEditId] = useState<string | null>(null);
   const [historyId, setHistoryId] = useState<string | null>(null);
@@ -93,16 +99,58 @@ export function HomeApp({ userName }: { userName?: string | null }) {
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const longPressFired = useRef(false);
 
+  const localToday = useCallback(() => todayYmd(), []);
+
   const refresh = useCallback(async () => {
-    const res = await listTasksAction();
+    const clientToday = localToday();
+    setToday(clientToday);
+    const res = await listTasksAction({ clientToday });
     if (!res.ok) {
       setLoading(false);
       return;
     }
-    setTasks(res.data.tasks);
-    setToday(res.data.today);
+    // サーバー返却の today より端末ローカルを優先し、派生を端末 today で再計算
+    const derived = sortTasks(
+      res.data.tasks.map((t) =>
+        deriveTask(
+          {
+            id: t.id,
+            name: t.name,
+            cycleDays: t.cycleDays,
+            logs: t.logs,
+          },
+          clientToday,
+        ),
+      ),
+    );
+    setTasks(derived);
     setLoading(false);
-  }, []);
+  }, [localToday]);
+
+  /** 取り消し後すぐ UI を合わせる（ホームの「記録済み」が残るのを防ぐ） */
+  const applyLocalLogRemoval = useCallback(
+    (taskId: string, date: string) => {
+      const day = localToday();
+      setToday(day);
+      setTasks((prev) =>
+        sortTasks(
+          prev.map((t) => {
+            if (t.id !== taskId) return t;
+            return deriveTask(
+              {
+                id: t.id,
+                name: t.name,
+                cycleDays: t.cycleDays,
+                logs: t.logs.filter((d) => d !== date),
+              },
+              day,
+            );
+          }),
+        ),
+      );
+    },
+    [localToday],
+  );
 
   useEffect(() => {
     (async () => {
@@ -191,17 +239,23 @@ export function HomeApp({ userName }: { userName?: string | null }) {
   };
 
   const record = (taskId: string, date?: string) => {
+    const clientToday = localToday();
+    const doneDate = date ?? clientToday;
     startTransition(async () => {
-      const res = await recordDoneAction({ taskId, date });
+      const res = await recordDoneAction({
+        taskId,
+        date: doneDate,
+        clientToday,
+      });
       if (!res.ok) {
         showToast(res.error);
         return;
       }
       const t = tasks.find((x) => x.id === taskId);
       const label =
-        res.data.date === today
+        res.data.date === clientToday
           ? "今日"
-          : relativeFromToday(res.data.date, today);
+          : relativeFromToday(res.data.date, clientToday);
       showToast(
         `「${t?.name ?? "タスク"}」を記録しました（${label}）`,
         { taskId, date: res.data.date },
@@ -217,6 +271,27 @@ export function HomeApp({ userName }: { userName?: string | null }) {
         });
       }, 1100);
       setSheetTaskId(null);
+      // 楽観更新
+      setToday(clientToday);
+      setTasks((prev) =>
+        sortTasks(
+          prev.map((task) => {
+            if (task.id !== taskId) return task;
+            const logs = task.logs.includes(res.data.date)
+              ? task.logs
+              : [...task.logs, res.data.date];
+            return deriveTask(
+              {
+                id: task.id,
+                name: task.name,
+                cycleDays: task.cycleDays,
+                logs,
+              },
+              clientToday,
+            );
+          }),
+        ),
+      );
       await refresh();
     });
   };
@@ -233,14 +308,21 @@ export function HomeApp({ userName }: { userName?: string | null }) {
     date: string,
     opts?: { fromToast?: boolean },
   ) => {
+    const t = tasks.find((x) => x.id === taskId);
+    const day = localToday();
+    const label = date === day ? "今日" : relativeFromToday(date, day);
+
+    // 先にローカル状態から外して「記録済み」を即時解除
+    applyLocalLogRemoval(taskId, date);
+
     startTransition(async () => {
       const res = await undoRecordAction({ taskId, date });
       if (!res.ok) {
+        // 失敗時はサーバー状態に戻す
         showToast(res.error);
+        await refresh();
         return;
       }
-      const t = tasks.find((x) => x.id === taskId);
-      const label = date === today ? "今日" : relativeFromToday(date, today);
       if (opts?.fromToast) {
         setToast(null);
       } else {
@@ -278,7 +360,7 @@ export function HomeApp({ userName }: { userName?: string | null }) {
     }
     // 誤タップ対策: 記録済みをもう一度タップで取り消し
     if (doneToday) {
-      cancelRecord(taskId, today);
+      cancelRecord(taskId, localToday());
       return;
     }
     record(taskId);

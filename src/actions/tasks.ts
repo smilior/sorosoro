@@ -15,6 +15,12 @@ import {
   type TaskWithLogs,
 } from "@/lib/domain/task";
 
+/** クライアントから渡された今日 (YYYY-MM-DD)。未指定・不正時はサーバー日付。 */
+function resolveToday(clientToday?: string): string {
+  if (clientToday && isValidYmd(clientToday)) return clientToday;
+  return todayYmd();
+}
+
 export type ActionResult<T = void> =
   | { ok: true; data: T }
   | { ok: false; error: string };
@@ -50,12 +56,13 @@ async function loadUserTasks(userId: string): Promise<TaskWithLogs[]> {
   }));
 }
 
-export async function listTasksAction(): Promise<
-  ActionResult<{ tasks: DerivedTask[]; today: string }>
-> {
+export async function listTasksAction(input?: {
+  /** 端末ローカルの今日。タイムゾーンずれ防止 */
+  clientToday?: string;
+}): Promise<ActionResult<{ tasks: DerivedTask[]; today: string }>> {
   try {
     const userId = await requireUserId();
-    const today = todayYmd();
+    const today = resolveToday(input?.clientToday);
     const raw = await loadUserTasks(userId);
     const derived = sortTasks(raw.map((t) => deriveTask(t, today)));
     return { ok: true, data: { tasks: derived, today } };
@@ -151,10 +158,12 @@ export async function deleteTaskAction(id: string): Promise<ActionResult> {
 export async function recordDoneAction(input: {
   taskId: string;
   date?: string;
+  /** 端末ローカルの今日（未来日ガード用） */
+  clientToday?: string;
 }): Promise<ActionResult<{ date: string }>> {
   try {
     const userId = await requireUserId();
-    const today = todayYmd();
+    const today = resolveToday(input.clientToday);
     const date = input.date ?? today;
 
     if (!isValidYmd(date)) {
@@ -189,6 +198,7 @@ export async function recordDoneAction(input: {
       .set({ updatedAt: new Date() })
       .where(eq(tasks.id, input.taskId));
 
+    revalidatePath("/home");
     revalidatePath("/");
     return { ok: true, data: { date } };
   } catch (e) {
@@ -211,15 +221,26 @@ export async function undoRecordAction(input: {
     });
     if (!owned) return { ok: false, error: "タスクが見つかりません" };
 
-    await db
+    const deleted = await db
       .delete(taskLogs)
       .where(
         and(
           eq(taskLogs.taskId, input.taskId),
           eq(taskLogs.doneDate, input.date),
         ),
-      );
+      )
+      .returning({ id: taskLogs.id });
 
+    if (!deleted.length) {
+      return { ok: false, error: "取り消す記録が見つかりません" };
+    }
+
+    await db
+      .update(tasks)
+      .set({ updatedAt: new Date() })
+      .where(eq(tasks.id, input.taskId));
+
+    revalidatePath("/home");
     revalidatePath("/");
     return { ok: true, data: undefined };
   } catch (e) {

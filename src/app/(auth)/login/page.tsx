@@ -93,6 +93,16 @@ function LoginContent() {
         <p className="mt-5 text-center text-[11.5px] font-medium leading-relaxed" style={{ color: "var(--sub)" }}>
           ログイン後、タスクと記録はあなたのアカウントに保存されます。
         </p>
+
+        <p className="mt-4 text-center">
+          <a
+            href="/help"
+            className="text-[12.5px] font-bold underline-offset-2"
+            style={{ color: "var(--accent-ink)" }}
+          >
+            使い方を見る
+          </a>
+        </p>
       </div>
     </div>
   );

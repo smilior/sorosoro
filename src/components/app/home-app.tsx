@@ -8,6 +8,7 @@ import {
   useState,
   useTransition,
 } from "react";
+import Link from "next/link";
 import {
   createTaskAction,
   deleteTaskAction,
@@ -514,7 +515,14 @@ export function HomeApp({ userName }: { userName?: string | null }) {
               )}
             </div>
 
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+            <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-4">
+              <Link
+                href="/help"
+                className="text-[12px] font-medium px-3 py-2"
+                style={{ color: "var(--sub)" }}
+              >
+                ヘルプ
+              </Link>
               <button
                 type="button"
                 onClick={() =>

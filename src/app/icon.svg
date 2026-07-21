@@ -1,10 +1,15 @@
 <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="16" y1="0" x2="16" y2="32" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#7CAF85"/>
-      <stop offset="1" stop-color="#6FA378"/>
+      <stop offset="0" stop-color="#83B78C"/>
+      <stop offset="1" stop-color="#639B6E"/>
     </linearGradient>
   </defs>
   <rect width="32" height="32" rx="9" fill="url(#bg)"/>
-  <path d="M8.8 16.3 L13.7 21.2 L23.2 10.3" fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- 家（掃除する「おうち」）。角はストロークの round join で丸める -->
+  <path d="M16 6.6 L26 14.7 V23.6 A2.1 2.1 0 0 1 23.9 25.7 H8.1 A2.1 2.1 0 0 1 6 23.6 V14.7 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2.2" stroke-linejoin="round"/>
+  <!-- 掃除完了のチェック -->
+  <path d="M11.7 18.8 L14.7 21.8 L20.6 15.6" fill="none" stroke="#5E9468" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- ピカピカのスパークル -->
+  <path d="M25.1 4.6 c.3 1.5 1 2.2 2.5 2.5 c-1.5 .3 -2.2 1 -2.5 2.5 c-.3 -1.5 -1 -2.2 -2.5 -2.5 c1.5 -.3 2.2 -1 2.5 -2.5 Z" fill="#FFFFFF"/>
 </svg>
